@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 
 namespace BallouBot
 {
@@ -8,11 +9,14 @@ namespace BallouBot
 		private readonly ConcurrentQueue<string> _normalPriorityQueue;
 		private readonly ConcurrentQueue<string> _lowPriorityQueue;
 
+		private readonly ConcurrentQueue<DateTime> _processedCommands;
+
 		public CommandQueue()
 		{
 			_lowPriorityQueue = new ConcurrentQueue<string>();
 			_normalPriorityQueue = new ConcurrentQueue<string>();
 			_highPriorityQueue = new ConcurrentQueue<string>();
+			_processedCommands = new ConcurrentQueue<DateTime>();
 		}
 
 		public void EnqueueCommand(string command)
@@ -36,20 +40,45 @@ namespace BallouBot
 			}
 		}
 
+		private void ClearQueue()
+		{
+			if (!_processedCommands.IsEmpty)
+			{
+				var now = DateTime.Now;
+				DateTime toCompare;
+				_processedCommands.TryPeek(out toCompare);
+
+				if ((now - toCompare).TotalSeconds > 31)
+				{
+					_processedCommands.TryDequeue(out toCompare);
+				}
+			}
+		}
+
 		public string DequeueCommand()
 		{
 			string command = "";
-			if (!_highPriorityQueue.IsEmpty)
+			ClearQueue();
+
+			if (_processedCommands.Count < 20)
 			{
-				_highPriorityQueue.TryDequeue(out command);
-			}
-			else if (!_normalPriorityQueue.IsEmpty)
-			{
-				_normalPriorityQueue.TryDequeue(out command);
-			}
-			else if (!_lowPriorityQueue.IsEmpty)
-			{
-				_lowPriorityQueue.TryDequeue(out command);
+				if (!_highPriorityQueue.IsEmpty)
+				{
+					_highPriorityQueue.TryDequeue(out command);
+				}
+				else if (!_normalPriorityQueue.IsEmpty)
+				{
+					_normalPriorityQueue.TryDequeue(out command);
+				}
+				else if (!_lowPriorityQueue.IsEmpty)
+				{
+					_lowPriorityQueue.TryDequeue(out command);
+				}
+
+				if (!string.IsNullOrWhiteSpace(command))
+				{
+					_processedCommands.Enqueue(DateTime.Now);
+				}
 			}
 
 			return command;
