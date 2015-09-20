@@ -57,6 +57,7 @@
     <Compile Include="ICommandQueue.cs" />
     <Compile Include="PluginStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueuePriority.cs" />
     <Compile Include="UserEvents.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
