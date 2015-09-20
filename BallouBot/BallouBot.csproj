@@ -48,7 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicChatParser.cs" />
+    <Compile Include="ConsoleHandler.cs" />
     <Compile Include="CommandQueue.cs" />
     <Compile Include="Connection.cs" />
     <Compile Include="ConnectionEvents.cs" />
