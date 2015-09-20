@@ -1,0 +1,20 @@
+﻿using System.IO;
+using System.Reflection;
+using Newtonsoft.Json;
+
+namespace BallouBot.Config
+{
+	public class Config
+	{
+		public Config()
+		{
+			var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			var filePath = Path.Combine(path, "config.json");
+			var jsonString = File.ReadAllText(filePath);
+			JsonConvert.PopulateObject(jsonString, this);
+		}
+
+		public string Nickname { get; set; }
+		public string Password { get; set; }
+	}
+}
