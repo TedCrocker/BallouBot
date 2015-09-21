@@ -51,7 +51,7 @@ namespace BallouBot
 					}
 				}
 				
-				if (!registeredEvent.Wait(1000))
+				if (!registeredEvent.Wait(10000))
 				{
 					Client.Dispose();
 					throw new Exception("[BALLOUBOT] Could not register.");

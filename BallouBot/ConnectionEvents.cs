@@ -7,7 +7,7 @@ namespace BallouBot
 	{
 		public static void OnRegistered(object sender, EventArgs e)
 		{
-			var client = (IrcClient)sender;
+			var client = (TwitchIrcClient)sender;
 
 			client.LocalUser.NoticeReceived += UserEvents.IrcClient_LocalUser_NoticeReceived;
 			client.LocalUser.MessageReceived += UserEvents.IrcClient_LocalUser_MessageReceived;
