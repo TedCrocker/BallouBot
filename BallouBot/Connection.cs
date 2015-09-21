@@ -23,14 +23,7 @@ namespace BallouBot
 			Client.Registered += ConnectionEvents.OnRegistered;
 			Client.ConnectFailed += ConnectionEvents.OnConnectFailed;
 
-			Client.RawMessageReceived += (sender, args) =>
-			{
-				var chatParsers = PluginStore.Container.GetExports<IChatParser>();
-				foreach (var chatParser in chatParsers)
-				{
-					chatParser.Value.ReceiveMessage(args.RawContent);
-				}
-			};
+			Client.RawMessageReceived += ConnectionEvents.RawMessageReceived;
 		}
 
 		public void Connect(string serverString, IrcRegistrationInfo registrationInfo)

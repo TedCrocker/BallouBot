@@ -15,6 +15,17 @@ namespace BallouBot
 			client.LocalUser.LeftChannel += UserEvents.IrcClient_LocalUser_LeftChannel;
 		}
 
+		public static void RawMessageReceived(object sender, IrcRawMessageEventArgs args)
+		{
+			var parsedMessage = MessageParser.ParseIrcMessage(args.RawContent);
+
+			var chatParsers = PluginStore.Container.GetExports<IChatParser>();
+			foreach (var chatParser in chatParsers)
+			{
+				chatParser.Value.ReceiveMessage(parsedMessage);
+			}
+		}
+
 		public static void OnDisconnected(object sender, EventArgs e)
 		{
 			Console.WriteLine("Disconnected");

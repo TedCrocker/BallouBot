@@ -25,9 +25,9 @@ namespace BallouBot
 			}
 		}
 
-		public void ReceiveMessage(string message)
+		public void ReceiveMessage(Message message)
 		{
-			Console.WriteLine(message);
+			Console.WriteLine(message.RawMessage);
 		}
 	}
 }
