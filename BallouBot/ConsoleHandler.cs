@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using BallouBot.Data;
 
 namespace BallouBot
 {
@@ -8,7 +9,7 @@ namespace BallouBot
 		private ICommandQueue _commandQueue;
 		private bool _running = true;
 
-		public ConsoleHandler(ICommandQueue commandQueue)
+		public ConsoleHandler(ICommandQueue commandQueue, IDataSource dataSource)
 		{
 			_commandQueue = commandQueue;
 			Thread thread = new Thread(ReadConsoleInput);

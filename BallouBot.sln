@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot", "BallouBot\BallouBot.csproj", "{AB5084DA-44B0-42FB-ACF3-A38090D4EDB9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot.Core", "BallouBot\BallouBot.Core.csproj", "{AB5084DA-44B0-42FB-ACF3-A38090D4EDB9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBotTests", "BallouBotTests\BallouBotTests.csproj", "{E79316D7-248E-4978-9A1D-5F4AAD5FA398}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleUI", "ConsoleUI\ConsoleUI.csproj", "{9812D5A0-1463-480A-8AFD-3EDBC02DCDB3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot.Config", "BallouBot.Config\BallouBot.Config.csproj", "{E2A94128-1A96-4AE2-B77E-71A2234F2BCE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot.Data", "BallouBot.Data\BallouBot.Data.csproj", "{50CE7811-8ED8-4173-82A3-FE460A94B0DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{E2A94128-1A96-4AE2-B77E-71A2234F2BCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2A94128-1A96-4AE2-B77E-71A2234F2BCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2A94128-1A96-4AE2-B77E-71A2234F2BCE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50CE7811-8ED8-4173-82A3-FE460A94B0DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50CE7811-8ED8-4173-82A3-FE460A94B0DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50CE7811-8ED8-4173-82A3-FE460A94B0DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50CE7811-8ED8-4173-82A3-FE460A94B0DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

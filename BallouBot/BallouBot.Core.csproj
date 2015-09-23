@@ -4,18 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9812D5A0-1463-480A-8AFD-3EDBC02DCDB3}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{AB5084DA-44B0-42FB-ACF3-A38090D4EDB9}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ConsoleUI</RootNamespace>
-    <AssemblyName>ConsoleUI</AssemblyName>
+    <RootNamespace>BallouBot</RootNamespace>
+    <AssemblyName>BallouBot</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -25,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,7 +37,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.Composition.registration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Reflection.Context" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -49,28 +48,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="ConsoleHandler.cs" />
+    <Compile Include="CommandQueue.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="ConnectionEvents.cs" />
+    <Compile Include="EventLoop.cs" />
+    <Compile Include="IChatParser.cs" />
+    <Compile Include="ICommandQueue.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="MessageParser.cs" />
+    <Compile Include="PluginStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueuePriority.cs" />
+    <Compile Include="UserEvents.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\config.json">
-      <Link>config.json</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BallouBot.Config\BallouBot.Config.csproj">
-      <Project>{e2a94128-1a96-4ae2-b77e-71a2234f2bce}</Project>
-      <Name>BallouBot.Config</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BallouBot.Data\BallouBot.Data.csproj">
-      <Project>{50CE7811-8ED8-4173-82A3-FE460A94B0DB}</Project>
+      <Project>{50ce7811-8ed8-4173-82a3-fe460a94b0db}</Project>
       <Name>BallouBot.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BallouBot\BallouBot.Core.csproj">
-      <Project>{AB5084DA-44B0-42FB-ACF3-A38090D4EDB9}</Project>
-      <Name>BallouBot.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -22,7 +22,6 @@ namespace BallouBot
 			Client.Disconnected += ConnectionEvents.OnDisconnected;
 			Client.Registered += ConnectionEvents.OnRegistered;
 			Client.ConnectFailed += ConnectionEvents.OnConnectFailed;
-
 			Client.RawMessageReceived += ConnectionEvents.RawMessageReceived;
 		}
 

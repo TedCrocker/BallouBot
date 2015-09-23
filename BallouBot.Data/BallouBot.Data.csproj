@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AB5084DA-44B0-42FB-ACF3-A38090D4EDB9}</ProjectGuid>
+    <ProjectGuid>{50CE7811-8ED8-4173-82A3-FE460A94B0DB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BallouBot</RootNamespace>
-    <AssemblyName>BallouBot</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <RootNamespace>BallouBot.Data</RootNamespace>
+    <AssemblyName>BallouBot.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,15 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IrcDotNet, Version=0.5.0.0, Culture=neutral, PublicKeyToken=44f6d157e750246b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\IrcDotNet\src\source\IrcDotNet\bin\Release\IrcDotNet.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.ComponentModel.Composition.registration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Reflection.Context" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,19 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleHandler.cs" />
-    <Compile Include="CommandQueue.cs" />
-    <Compile Include="Connection.cs" />
-    <Compile Include="ConnectionEvents.cs" />
-    <Compile Include="EventLoop.cs" />
-    <Compile Include="IChatParser.cs" />
-    <Compile Include="ICommandQueue.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="MessageParser.cs" />
-    <Compile Include="PluginStore.cs" />
+    <Compile Include="Channel.cs" />
+    <Compile Include="DataSource.cs" />
+    <Compile Include="IDataSource.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="DataEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueuePriority.cs" />
-    <Compile Include="UserEvents.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -63,9 +63,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BallouBot\BallouBot.csproj">
+    <ProjectReference Include="..\BallouBot\BallouBot.Core.csproj">
       <Project>{AB5084DA-44B0-42FB-ACF3-A38090D4EDB9}</Project>
-      <Name>BallouBot</Name>
+      <Name>BallouBot.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
