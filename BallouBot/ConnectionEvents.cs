@@ -8,21 +8,24 @@ namespace BallouBot
 		public static void OnRegistered(object sender, EventArgs e)
 		{
 			var client = (TwitchIrcClient)sender;
-
-			client.LocalUser.NoticeReceived += UserEvents.IrcClient_LocalUser_NoticeReceived;
-			client.LocalUser.MessageReceived += UserEvents.IrcClient_LocalUser_MessageReceived;
-			client.LocalUser.JoinedChannel += UserEvents.IrcClient_LocalUser_JoinedChannel;
-			client.LocalUser.LeftChannel += UserEvents.IrcClient_LocalUser_LeftChannel;
+			//This don't really work
+			//client.LocalUser.NoticeReceived += UserEvents.IrcClient_LocalUser_NoticeReceived;
+			//client.LocalUser.MessageReceived += UserEvents.IrcClient_LocalUser_MessageReceived;
+			//client.LocalUser.JoinedChannel += UserEvents.IrcClient_LocalUser_JoinedChannel;
+			//client.LocalUser.LeftChannel += UserEvents.IrcClient_LocalUser_LeftChannel;
 		}
 
 		public static void RawMessageReceived(object sender, IrcRawMessageEventArgs args)
 		{
-			var parsedMessage = MessageParser.ParseIrcMessage(args.RawContent);
-
-			var chatParsers = PluginStore.Container.GetExports<IChatParser>();
-			foreach (var chatParser in chatParsers)
+			if (!args.RawContent.StartsWith("PING"))
 			{
-				chatParser.Value.ReceiveMessage(parsedMessage);
+				var parsedMessage = MessageParser.ParseIrcMessage(args.RawContent);
+
+				var chatParsers = PluginStore.Container.GetExports<IChatParser>();
+				foreach (var chatParser in chatParsers)
+				{
+					chatParser.Value.ReceiveMessage(parsedMessage);
+				}
 			}
 		}
 

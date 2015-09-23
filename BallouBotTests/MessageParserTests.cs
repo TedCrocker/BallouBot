@@ -1,4 +1,5 @@
-﻿using BallouBot;
+﻿using System.Runtime.Serialization;
+using BallouBot;
 using Xunit;
 
 namespace BallouBotTests
@@ -12,8 +13,27 @@ namespace BallouBotTests
 			var message = MessageParser.ParseIrcMessage(motd);
 
 			Assert.NotNull(message);
-			Assert.Equal(message.Command, 1);
+			Assert.Equal(message.Command, "001");
 		}
 
+		[Fact]
+		public void CanPartJoinResponse()
+		{
+			var join = ":balloubot!balloubot@balloubot.tmi.twitch.tv JOIN #ballouthebear";
+			var message = MessageParser.ParseIrcMessage(join);
+
+			Assert.NotNull(message);
+		}
+
+		[Fact]
+		public void CanParsePrivateMessages()
+		{
+			var privMessage = ":ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :books";
+			var message = MessageParser.ParseIrcMessage(privMessage);
+
+			Assert.NotNull(message);
+			Assert.Equal(message.User, "ballouthebear");
+			Assert.Equal(message.Channel, "#ballouthebear");
+		}
 	}
 }

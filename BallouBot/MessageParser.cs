@@ -26,10 +26,10 @@ namespace BallouBot
 			var match = Regex.Match(rawMessage);
 			var message = new Message
 			{
-				Command = Int32.Parse(match.Groups["Command"].Value),
+				Command = match.Groups["Command"].Value,
 				Parameters = match.Groups["middle"].Captures.
 					OfType<Capture>().
-					Select(c => c.Value),
+					Select(c => c.Value.Trim()),
 				Prefix = match.Groups["Prefix"].Value,
 				RawMessage = rawMessage,
 				Suffix = match.Groups["trailing"].Value
