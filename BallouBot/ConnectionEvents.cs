@@ -7,16 +7,16 @@ namespace BallouBot
 	{
 		public static void OnRegistered(object sender, EventArgs e){}
 
-		public static void RawMessageReceived(object sender, IrcRawMessageEventArgs args)
+		public async static void RawMessageReceived(object sender, IrcRawMessageEventArgs args)
 		{
 			if (!args.RawContent.StartsWith("PING"))
 			{
 				var parsedMessage = MessageParser.ParseIrcMessage(args.RawContent);
-
 				var chatParsers = PluginStore.Container.GetExports<IChatParser>();
+
 				foreach (var chatParser in chatParsers)
 				{
-					chatParser.Value.ReceiveMessage(parsedMessage);
+					await chatParser.Value.ReceiveMessage(parsedMessage);
 				}
 			}
 		}
