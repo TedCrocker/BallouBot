@@ -2,8 +2,8 @@
 
 namespace BallouBot.Data
 {
-	public class DataEntity
+	public abstract class DataEntity
 	{
-		public IDictionary<string, string> Data;
+		public string Id { get; set; }
 	}
 }

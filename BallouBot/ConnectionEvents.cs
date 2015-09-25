@@ -5,15 +5,7 @@ namespace BallouBot
 {
 	public static class ConnectionEvents
 	{
-		public static void OnRegistered(object sender, EventArgs e)
-		{
-			var client = (TwitchIrcClient)sender;
-			//This don't really work
-			//client.LocalUser.NoticeReceived += UserEvents.IrcClient_LocalUser_NoticeReceived;
-			//client.LocalUser.MessageReceived += UserEvents.IrcClient_LocalUser_MessageReceived;
-			//client.LocalUser.JoinedChannel += UserEvents.IrcClient_LocalUser_JoinedChannel;
-			//client.LocalUser.LeftChannel += UserEvents.IrcClient_LocalUser_LeftChannel;
-		}
+		public static void OnRegistered(object sender, EventArgs e){}
 
 		public static void RawMessageReceived(object sender, IrcRawMessageEventArgs args)
 		{
