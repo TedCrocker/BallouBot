@@ -57,6 +57,7 @@
     <Compile Include="ICommandQueue.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="MessageParser.cs" />
+    <Compile Include="ModWelcomer.cs" />
     <Compile Include="PluginStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueuePriority.cs" />

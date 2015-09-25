@@ -33,6 +33,12 @@ namespace BallouBot.Data
 			return await Collection.Find(new BsonDocument()).ToListAsync();
 		}
 
+		public async Task<IEnumerable<T>> Get(string id)
+		{
+			var filter = Builders<BsonDocument>.Filter.Eq("_id", id).ToBsonDocument();
+			return await Collection.Find(filter).ToListAsync();
+		}
+
 		public async Task Create(T entity)
 		{
 			await Collection.InsertOneAsync(entity);
