@@ -8,6 +8,6 @@ namespace BallouBot.Data
 		Task<IEnumerable<T>> FindAll();
 		Task Create(T instance);
 		Task Update(object id, T instance);
-		Task<IEnumerable<T>> Get(string id);
+		T Get(string id);
 	}
 }

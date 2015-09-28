@@ -11,13 +11,7 @@ namespace BallouBot
 		{
 			if (!args.RawContent.StartsWith("PING"))
 			{
-				var parsedMessage = MessageParser.ParseIrcMessage(args.RawContent);
-				var chatParsers = PluginStore.Container.GetExports<IChatParser>();
-
-				foreach (var chatParser in chatParsers)
-				{
-					await chatParser.Value.ReceiveMessage(parsedMessage);
-				}
+				RawMessageHandler.ProcessRawMessage(args.RawContent);
 			}
 		}
 

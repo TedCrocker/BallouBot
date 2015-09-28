@@ -1,5 +1,7 @@
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -9,7 +11,8 @@ namespace BallouBot.Data
 	public class MongoRepository<T> : IRepository<T> where T : class, new()
 	{
 		private IMongoDatabase _database;
-
+		private IDictionary<string, T> _objectCache;
+		private bool _cacheHasBeenBuilt = false;
 		private IMongoCollection<T> _collection;
 		private IMongoCollection<T> Collection
 		{
@@ -26,22 +29,31 @@ namespace BallouBot.Data
 		public MongoRepository(IMongoDatabase database)
 		{
 			_database = database;
+			_objectCache = new ConcurrentDictionary<string, T>();
+			BuildCache();
+			_cacheHasBeenBuilt = true;
 		}
 
 		public async Task<IEnumerable<T>> FindAll()
 		{
-			return await Collection.Find(new BsonDocument()).ToListAsync();
+			return _objectCache.Values;
 		}
 
-		public async Task<IEnumerable<T>> Get(string id)
+		public T Get(string id)
 		{
-			var filter = Builders<BsonDocument>.Filter.Eq("_id", id).ToBsonDocument();
-			return await Collection.Find(filter).ToListAsync();
+			if (_objectCache.ContainsKey(id))
+			{
+				return _objectCache[id];
+			}
+
+			return null;
 		}
 
 		public async Task Create(T entity)
 		{
 			await Collection.InsertOneAsync(entity);
+			var id = entity.ToBsonDocument()["_id"].AsString;
+			_objectCache.Add(id, entity);
 		}
 
 		public async Task Update(object id, T instance)
@@ -49,5 +61,16 @@ namespace BallouBot.Data
 			var idQuery = string.Format("{{_id:\"{0}\"}}", id.ToString());
 			await Collection.FindOneAndReplaceAsync<T>(idQuery, instance);
 		}
+
+		private async void BuildCache()
+		{
+			var all = await Collection.Find(new BsonDocument()).ToListAsync();
+			foreach (var obj in all)
+			{
+				var id = obj.ToBsonDocument()["_id"].AsString;
+				_objectCache.Add(id, obj);
+			}
+		}
+
 	}
 }

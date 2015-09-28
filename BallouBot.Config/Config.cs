@@ -16,5 +16,7 @@ namespace BallouBot.Config
 
 		public string Nickname { get; set; }
 		public string Password { get; set; }
+		public string TwitchClientID { get; set; }
+		public string TwitchRedirectUrl { get; set; }
 	}
 }

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot.Config", "BallouB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot.Data", "BallouBot.Data\BallouBot.Data.csproj", "{50CE7811-8ED8-4173-82A3-FE460A94B0DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot.Twitch", "BallouBot.Twitch\BallouBot.Twitch.csproj", "{9B3E671A-FC3F-4452-8CCA-C9A5B780365A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{50CE7811-8ED8-4173-82A3-FE460A94B0DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50CE7811-8ED8-4173-82A3-FE460A94B0DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50CE7811-8ED8-4173-82A3-FE460A94B0DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B3E671A-FC3F-4452-8CCA-C9A5B780365A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B3E671A-FC3F-4452-8CCA-C9A5B780365A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B3E671A-FC3F-4452-8CCA-C9A5B780365A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B3E671A-FC3F-4452-8CCA-C9A5B780365A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

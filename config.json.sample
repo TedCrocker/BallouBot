@@ -1,4 +1,6 @@
 {
 		Nickname: "Nickname",
-		Password: "oauth:XXXXyyyyETC"
+		Password: "oauth:XXXXyyyyETC",
+		TwitchClientID: "http://www.twitch.tv/kraken/oauth2/clients"
+		TwitchRedirectUrl: "http://localhost"
 }

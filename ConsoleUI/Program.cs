@@ -25,7 +25,6 @@ namespace ConsoleUI
 			connection.Connect(IrcTwitchTv, registrationInfo);
 
 			var commandQueue = PluginStore.Container.GetExport<ICommandQueue>();
-			var dataStore = PluginStore.Container.GetExport<IDataSource>();
 			var loop = new EventLoop();
 			loop.Start(connection.Client, commandQueue.Value);
 		}
