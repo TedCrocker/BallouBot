@@ -22,5 +22,18 @@ namespace BallouBot.Twitch
 			var twitchUser = await _twixel.RetrieveUser(user.Id, Twixel.APIVersion.v3);
 			user.Name = twitchUser.displayName;
 		}
+
+		public async Task<TimeSpan?> GetUptime(string channel)
+		{
+			TimeSpan? timeSpan = null;
+			try
+			{
+				var stream = await _twixel.RetrieveStream(channel);
+				timeSpan = (DateTime.UtcNow - stream.createdAt);
+			}
+			catch (Exception e){}
+			
+			return timeSpan;
+		}
 	}
 }

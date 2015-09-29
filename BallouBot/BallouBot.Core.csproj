@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChatParsers\ConsoleHandler.cs" />
+    <Compile Include="ChatParsers\UptimeHandler.cs" />
     <Compile Include="Core\CommandQueue.cs" />
     <Compile Include="Core\Connection.cs" />
     <Compile Include="Core\ConnectionEvents.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Core\MessageParser.cs" />
     <Compile Include="ChatParsers\ModWelcomer.cs" />
     <Compile Include="Core\PluginStore.cs" />
+    <Compile Include="MessageHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueuePriority.cs" />
     <Compile Include="Core\RawMessageHandler.cs" />
