@@ -49,7 +49,7 @@ namespace BallouBot.Core
 				DateTime toCompare;
 				_processedCommands.TryPeek(out toCompare);
 
-				if ((now - toCompare).TotalSeconds > 31)
+				if ((now - toCompare).TotalSeconds > Constants.CommandDequeueTimeLimit)
 				{
 					_processedCommands.TryDequeue(out toCompare);
 				}
@@ -61,7 +61,7 @@ namespace BallouBot.Core
 			string command = "";
 			ClearQueue();
 
-			if (_processedCommands.Count < 20)
+			if (_processedCommands.Count < Constants.CommandDequeueCommandLimit)
 			{
 				if (!_highPriorityQueue.IsEmpty)
 				{
