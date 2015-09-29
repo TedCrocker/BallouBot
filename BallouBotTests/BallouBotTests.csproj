@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandQueueTests.cs" />
+    <Compile Include="MessageHelpersTests.cs" />
     <Compile Include="MessageParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

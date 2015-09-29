@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using BallouBot;
 using BallouBot.Core;
 using Xunit;
 
