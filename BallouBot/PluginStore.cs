@@ -3,6 +3,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Registration;
 using System.Runtime.InteropServices.ComTypes;
 using BallouBot.Data;
+using BallouBot.Logging;
 
 namespace BallouBot
 {
@@ -25,10 +26,15 @@ namespace BallouBot
 				.Export<IChatParser>()
 				.SelectConstructor(cinfo => cinfo[0]);
 
+			builder.ForType<Log>()
+				.Export<ILog>()
+				.SetCreationPolicy(CreationPolicy.Shared);
+
 			var aggregateCatalog = new AggregateCatalog();
 
 			aggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(PluginStore).Assembly, builder));
 			aggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(IDataSource).Assembly, builder));
+			aggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ILog).Assembly, builder));
 			
 			Container = new CompositionContainer(aggregateCatalog);
 		}

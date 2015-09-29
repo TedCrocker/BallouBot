@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AB5084DA-44B0-42FB-ACF3-A38090D4EDB9}</ProjectGuid>
+    <ProjectGuid>{336BDAC2-0122-43CE-8D78-15B2F899E89F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BallouBot</RootNamespace>
-    <AssemblyName>BallouBot</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <RootNamespace>BallouBot.Logging</RootNamespace>
+    <AssemblyName>BallouBot.Logging</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,15 +30,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="IrcDotNet, Version=0.5.0.0, Culture=neutral, PublicKeyToken=44f6d157e750246b, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\IrcDotNet\src\source\IrcDotNet\bin\Release\IrcDotNet.dll</HintPath>
+    <Reference Include="Serilog, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.1.5.11\lib\net45\Serilog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Serilog.FullNetFx, Version=1.5.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.1.5.11\lib\net45\Serilog.FullNetFx.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.ComponentModel.Composition.registration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Reflection.Context" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,38 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleHandler.cs" />
-    <Compile Include="CommandQueue.cs" />
-    <Compile Include="Connection.cs" />
-    <Compile Include="ConnectionEvents.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="EventLoop.cs" />
-    <Compile Include="IChatParser.cs" />
-    <Compile Include="ICommandQueue.cs" />
-    <Compile Include="Message.cs" />
-    <Compile Include="MessageParser.cs" />
-    <Compile Include="ModWelcomer.cs" />
-    <Compile Include="PluginStore.cs" />
+    <Compile Include="ILog.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QueuePriority.cs" />
-    <Compile Include="RawMessageHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BallouBot.Data\BallouBot.Data.csproj">
-      <Project>{50ce7811-8ed8-4173-82a3-fe460a94b0db}</Project>
-      <Name>BallouBot.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BallouBot.Logging\BallouBot.Logging.csproj">
-      <Project>{336bdac2-0122-43ce-8d78-15b2f899e89f}</Project>
-      <Name>BallouBot.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BallouBot.Twitch\BallouBot.Twitch.csproj">
-      <Project>{9b3e671a-fc3f-4452-8cca-c9a5b780365a}</Project>
-      <Name>BallouBot.Twitch</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

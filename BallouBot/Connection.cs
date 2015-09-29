@@ -5,6 +5,7 @@ using System.Runtime.Remoting.Channels;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using BallouBot.Logging;
 using IrcDotNet;
 
 namespace BallouBot
@@ -12,6 +13,7 @@ namespace BallouBot
 	public class Connection : IDisposable
 	{
 		public TwitchIrcClient Client;
+		private ILog _logger;
 		public bool IsConnected { get; set; }
 
 		public Connection()
@@ -23,11 +25,13 @@ namespace BallouBot
 			Client.Registered += ConnectionEvents.OnRegistered;
 			Client.ConnectFailed += ConnectionEvents.OnConnectFailed;
 			Client.RawMessageReceived += ConnectionEvents.RawMessageReceived;
+			_logger = PluginStore.Container.GetExport<ILog>().Value;
 		}
 
 		public void Connect(string serverString, IrcRegistrationInfo registrationInfo)
 		{
-			Console.WriteLine("[BALLOUBOT] Attempting to connect");
+
+			_logger.Info("[BALLOUBOT] Attempting to connect");
 			using (var registeredEvent = new ManualResetEventSlim(false))
 			{
 				using (var connectedEvent = new ManualResetEventSlim(false))
@@ -50,8 +54,8 @@ namespace BallouBot
 				}
 			}
 			IsConnected = true;
-			
-			Console.WriteLine("[BALLOUBOT] Connected and Registered.");
+
+			_logger.Info("[BALLOUBOT] Connected and Registered.");
 		}
 
 		public void Dispose()

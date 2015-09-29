@@ -9,8 +9,8 @@ namespace BallouBot
 	{
 		private readonly ICommandQueue _commandQueue;
 		private bool _running = true;
-
-		public ConsoleHandler(ICommandQueue commandQueue, IDataSource dataSource)
+		
+		public ConsoleHandler(ICommandQueue commandQueue)
 		{
 			_commandQueue = commandQueue;
 			Thread thread = new Thread(ReadConsoleInput);
@@ -29,7 +29,14 @@ namespace BallouBot
 
 		public async Task ReceiveMessage(Message message)
 		{
-			Console.WriteLine(message.RawMessage);
+			if (message.User == Constants.TwitchUser)
+			{
+				Console.WriteLine("|TWITCH| " + message.Suffix);
+			}
+			else
+			{
+				Console.WriteLine(message.Channel + ">" + message.User + ">  " + message.Suffix);
+			}
 		}
 	}
 }
