@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Channels;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using BallouBot.Logging;
 using IrcDotNet;
 
-namespace BallouBot
+namespace BallouBot.Core
 {
 	public class Connection : IDisposable
 	{

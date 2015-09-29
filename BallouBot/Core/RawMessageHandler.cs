@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Concurrent;
 using BallouBot.Data;
+using BallouBot.Interfaces;
 using BallouBot.Twitch;
 
-namespace BallouBot
+namespace BallouBot.Core
 {
 	public static class RawMessageHandler
 	{

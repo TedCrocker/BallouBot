@@ -1,4 +1,4 @@
-﻿namespace BallouBot
+﻿namespace BallouBot.Interfaces
 {
 	public interface ICommandQueue
 	{

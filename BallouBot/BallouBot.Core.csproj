@@ -48,21 +48,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleHandler.cs" />
-    <Compile Include="CommandQueue.cs" />
-    <Compile Include="Connection.cs" />
-    <Compile Include="ConnectionEvents.cs" />
+    <Compile Include="ChatParsers\ConsoleHandler.cs" />
+    <Compile Include="Core\CommandQueue.cs" />
+    <Compile Include="Core\Connection.cs" />
+    <Compile Include="Core\ConnectionEvents.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="EventLoop.cs" />
-    <Compile Include="IChatParser.cs" />
-    <Compile Include="ICommandQueue.cs" />
+    <Compile Include="Core\EventLoop.cs" />
+    <Compile Include="Interfaces\IChatParser.cs" />
+    <Compile Include="Interfaces\ICommandQueue.cs" />
     <Compile Include="Message.cs" />
-    <Compile Include="MessageParser.cs" />
-    <Compile Include="ModWelcomer.cs" />
-    <Compile Include="PluginStore.cs" />
+    <Compile Include="Core\MessageParser.cs" />
+    <Compile Include="ChatParsers\ModWelcomer.cs" />
+    <Compile Include="Core\PluginStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueuePriority.cs" />
-    <Compile Include="RawMessageHandler.cs" />
+    <Compile Include="Core\RawMessageHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BallouBot.Data\BallouBot.Data.csproj">
@@ -81,6 +81,7 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

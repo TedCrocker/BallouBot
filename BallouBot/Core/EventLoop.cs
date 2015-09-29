@@ -1,7 +1,7 @@
-using System;
+using BallouBot.Interfaces;
 using IrcDotNet;
 
-namespace BallouBot
+namespace BallouBot.Core
 {
 	public class EventLoop
 	{

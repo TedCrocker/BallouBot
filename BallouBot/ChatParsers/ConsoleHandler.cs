@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using BallouBot.Data;
+using BallouBot.Interfaces;
 
-namespace BallouBot
+namespace BallouBot.ChatParsers
 {
 	public class ConsoleHandler : IChatParser
 	{

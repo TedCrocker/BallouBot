@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BallouBot.Data;
+using BallouBot.Interfaces;
 using BallouBot.Logging;
 
-namespace BallouBot
+namespace BallouBot.ChatParsers
 {
 	public class ModWelcomer : IChatParser
 	{

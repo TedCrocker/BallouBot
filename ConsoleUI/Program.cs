@@ -1,6 +1,8 @@
 ﻿using BallouBot;
 using BallouBot.Config;
+using BallouBot.Core;
 using BallouBot.Data;
+using BallouBot.Interfaces;
 using IrcDotNet;
 
 namespace ConsoleUI

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using BallouBot.Interfaces;
 
-namespace BallouBot
+namespace BallouBot.Core
 {
 	public class CommandQueue : ICommandQueue
 	{

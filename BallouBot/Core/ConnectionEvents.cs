@@ -1,7 +1,7 @@
 ﻿using System;
 using IrcDotNet;
 
-namespace BallouBot
+namespace BallouBot.Core
 {
 	public static class ConnectionEvents
 	{

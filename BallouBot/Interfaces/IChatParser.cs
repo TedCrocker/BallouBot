@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace BallouBot
+namespace BallouBot.Interfaces
 {
 	public interface IChatParser
 	{

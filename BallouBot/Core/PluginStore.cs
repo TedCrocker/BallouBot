@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Registration;
-using System.Runtime.InteropServices.ComTypes;
 using BallouBot.Data;
+using BallouBot.Interfaces;
 using BallouBot.Logging;
 
-namespace BallouBot
+namespace BallouBot.Core
 {
 	public class PluginStore
 	{
