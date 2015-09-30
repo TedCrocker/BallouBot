@@ -1,4 +1,5 @@
 ﻿using System;
+using BallouBot.Interfaces;
 using IrcDotNet;
 
 namespace BallouBot.Core
@@ -22,7 +23,11 @@ namespace BallouBot.Core
 
 		public static void OnConnected(object sender, EventArgs e)
 		{
-			Console.WriteLine("Connected");
+			Console.WriteLine("Connected.");
+			var commandQueue = PluginStore.Container.GetExport<ICommandQueue>().Value;
+			commandQueue.EnqueueCommand("CAP REQ :twitch.tv/tags", QueuePriority.High);
+			commandQueue.EnqueueCommand("CAP REQ :twitch.tv/commands", QueuePriority.High);
+			commandQueue.EnqueueCommand("CAP REQ :twitch.tv/membership", QueuePriority.High);
 		}
 
 		public static void OnConnectFailed(object sender, IrcErrorEventArgs e)

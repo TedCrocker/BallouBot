@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BallouBot
@@ -10,16 +11,29 @@ namespace BallouBot
 		public string Suffix { get; set; }
 		public IEnumerable<string> Parameters { get; set; }
 		public string Command { get; set; }
-
+		public IDictionary<string, string> Tags { get; set; }
 		private string _userName;
-		public string User
+
+		public Message()
+		{
+			Tags = new ConcurrentDictionary<string,string>();
+		}
+
+	public string User
 		{
 			get
 			{
 				if (string.IsNullOrWhiteSpace(_userName))
 				{
-					var split = Prefix.Split('!').First();
-					_userName = split.Substring(0);
+					if (Tags.ContainsKey("display-name"))
+					{
+						_userName = Tags["display-name"].ToLower();
+					}
+					else
+					{
+						var split = Prefix.Split('!').First();
+						_userName = split.Substring(0);
+					}
 				}
 
 				return _userName;

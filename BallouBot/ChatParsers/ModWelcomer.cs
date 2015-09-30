@@ -39,7 +39,7 @@ namespace BallouBot.ChatParsers
 				{
 					if (ShouldSendMessage(message, user))
 					{
-						var honorific = _honorifics.OrderBy(n => new Guid()).First();
+						var honorific = _honorifics.OrderBy(n => Guid.NewGuid()).First();
 						_commandQueue.EnqueueCommand("PRIVMSG " + message.Channel + " :Welcome back " + user.Name + honorific + ".");
 					}
 

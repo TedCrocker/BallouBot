@@ -33,8 +33,8 @@ namespace BallouBot.Core
 				{
 					Client.Connected += (sender, args) => connectedEvent.Set();
 					Client.Registered += (sender, args) => registeredEvent.Set();
-					
 					Client.Connect(serverString, false, registrationInfo);
+
 					if (!connectedEvent.Wait(1000))
 					{
 						Client.Dispose();

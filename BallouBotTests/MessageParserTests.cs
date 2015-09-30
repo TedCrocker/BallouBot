@@ -35,5 +35,15 @@ namespace BallouBotTests
 			Assert.Equal(message.User, "ballouthebear");
 			Assert.Equal(message.Channel, "#ballouthebear");
 		}
+
+		[Fact]
+		public void CanParseUserStateMessage()
+		{
+			var rawMessage = "@color=;display-name=Balloubot;emote-sets=0;subscriber=0;turbo=0;user-type=mod :tmi.twitch.tv USERSTATE #ballouthebear";
+			var message = MessageParser.ParseIrcMessage(rawMessage);
+
+			Assert.NotNull(message);
+			Assert.True(message.Tags.ContainsKey("user-type"));
+		}
 	}
 }

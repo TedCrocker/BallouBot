@@ -20,7 +20,7 @@ namespace BallouBot.Core
 			}
 		}
 
-		public static Message ParseIrcMessage(string rawMessage)
+		private static Message HandleOldStyleMessage(string rawMessage)
 		{
 			var match = Regex.Match(rawMessage);
 			var message = new Message
@@ -35,6 +35,34 @@ namespace BallouBot.Core
 			};
 
 			return message;
+		}
+
+		private static Message HandleV3Message(string rawMessage)
+		{
+			var firstSpace = rawMessage.IndexOf(' ');
+			var message = HandleOldStyleMessage(rawMessage.Substring(firstSpace));
+
+			var tags = rawMessage.Substring(1, firstSpace).Split(';');
+			foreach (var tag in tags)
+			{
+				var tagItems = tag.Split('=');
+				if (tagItems.Length == 2)
+				{
+					message.Tags.Add(tagItems[0], tagItems[1]);
+				}
+			}
+
+			return message;
+		}
+
+		public static Message ParseIrcMessage(string rawMessage)
+		{
+			if (rawMessage.StartsWith("@"))
+			{
+				return HandleV3Message(rawMessage);
+			}
+
+			return HandleOldStyleMessage(rawMessage);
 		}
 	}
 }
