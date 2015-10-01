@@ -10,7 +10,7 @@ namespace BallouBot
 	{
 		public static string PrivateMessage(Message incomingMessage, string outgoingMessage)
 		{
-			var str = $"{Constants.PrivateMessage} {incomingMessage.Channel} :{outgoingMessage}";
+			var str = $"{Constants.PrivateMessageCommand} {incomingMessage.Channel} :{outgoingMessage}";
 			return str;
 		}
 	}

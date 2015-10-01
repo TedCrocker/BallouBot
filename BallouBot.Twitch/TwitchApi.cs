@@ -31,7 +31,10 @@ namespace BallouBot.Twitch
 				var stream = await _twixel.RetrieveStream(channel);
 				timeSpan = (DateTime.UtcNow - stream.createdAt);
 			}
-			catch (Exception e){}
+			catch (Exception e)
+			{
+				
+			}
 			
 			return timeSpan;
 		}

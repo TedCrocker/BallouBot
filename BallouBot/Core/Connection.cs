@@ -25,7 +25,6 @@ namespace BallouBot.Core
 
 		public void Connect(string serverString, IrcRegistrationInfo registrationInfo)
 		{
-
 			_logger.Info("[BALLOUBOT] Attempting to connect");
 			using (var registeredEvent = new ManualResetEventSlim(false))
 			{

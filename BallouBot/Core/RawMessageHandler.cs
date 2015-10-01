@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using BallouBot.Data;
 using BallouBot.Interfaces;
+using BallouBot.Logging;
 using BallouBot.Twitch;
 
 namespace BallouBot.Core
@@ -12,8 +14,9 @@ namespace BallouBot.Core
 		{
 			var parsedMessage = MessageParser.ParseIrcMessage(rawMessage);
 			var chatParsers = PluginStore.Container.GetExports<IChatParser>();
+			var logger = PluginStore.Container.GetExport<ILog>().Value;
 
-			MakeSureUserIsBuilt(parsedMessage);
+			MakeSureUserIsBuilt(parsedMessage, logger);
 
 			foreach (var chatParser in chatParsers)
 			{
@@ -23,32 +26,62 @@ namespace BallouBot.Core
 				}
 				catch (Exception e)
 				{
-					
+					logger.Error(e, $"\r\n{rawMessage}", rawMessage);
 				}
 			}
 		}
 
-		private async static void MakeSureUserIsBuilt(Message parsedMessage)
+		private static IList<string> _useresToIgnore = new List<string>()
 		{
-			var dataStore = PluginStore.Container.GetExport<IDataSource>().Value;
-			var user = dataStore.Repository<User>().Get(parsedMessage.User);
-			if (user == null)
+			"jtv",
+            Constants.TwitchUser
+        };
+
+
+		private static async void MakeSureUserIsBuilt(Message parsedMessage, ILog logger)
+		{
+			if (_useresToIgnore.Contains(parsedMessage.User))
 			{
-				var userObject = new User()
-				{
-					Id = parsedMessage.User,
-					Data = new ConcurrentDictionary<string, object>()
-				};
-
-				var api = new TwitchApi();
-				try
-				{
-					await api.SetUserInfo(userObject);
-					await dataStore.Repository<User>().Create(userObject);
-				}
-				catch (Exception e){}
+				return;
 			}
+			if (parsedMessage.Command == Constants.UserStateCommand)
+			{
+				var dataStore = PluginStore.Container.GetExport<IDataSource>().Value;
+				var user = dataStore.Repository<User>().Get(parsedMessage.User);
 
+				if (user == null)
+				{
+					user = new User()
+					{
+						Id = parsedMessage.User,
+						Channels = new ConcurrentDictionary<string, UserChannel>(),
+						Data = new ConcurrentDictionary<string, object>()
+					};
+
+					var api = new TwitchApi();
+					try
+					{
+						api.SetUserInfo(user);
+						dataStore.Repository<User>().Create(user);
+					}
+					catch (Exception e)
+					{
+						logger.Error(e);
+					}
+				}
+
+				if (!user.Channels.ContainsKey(parsedMessage.Channel))
+				{
+					user.Channels.Add(parsedMessage.Channel, new UserChannel()
+					{
+						Name = parsedMessage.Channel
+					});
+				}
+				if (parsedMessage.Tags.ContainsKey("user-type") && parsedMessage.Tags["user-type"] == "mod")
+				{
+					user.Channels[parsedMessage.Channel].IsModerator = true;
+				}
+			}
 		}
 	}
 }

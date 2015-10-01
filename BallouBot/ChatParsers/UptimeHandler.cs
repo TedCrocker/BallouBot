@@ -20,7 +20,7 @@ namespace BallouBot.ChatParsers
 
 		public async Task ReceiveMessage(Message message)
 		{
-			if (message.Command == Constants.PrivateMessage && message.Suffix.ToLower() == "!uptime")
+			if (message.Command == Constants.PrivateMessageCommand && message.Suffix.ToLower() == "!uptime")
 			{
 				var sendMessage = true;
 				if (_lastRequests.ContainsKey(message.Channel))

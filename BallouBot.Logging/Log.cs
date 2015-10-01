@@ -12,14 +12,14 @@ namespace BallouBot.Logging
 			_logger = new LoggerConfiguration().WriteTo.ColoredConsole().CreateLogger();
 		}
 
-		public void Error(Exception e)
+		public void Error(Exception e, string template = "", params object[] props)
 		{
-			_logger.Error(e, "");
+			_logger.Error(e, template, props);
 		}
 
-		public void Info(string message)
+		public void Info(string message, params object[] props)
 		{
-			_logger.Information(message);
+			_logger.Information(message, props);
 		}
 	}
 }

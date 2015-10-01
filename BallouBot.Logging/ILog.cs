@@ -8,7 +8,7 @@ namespace BallouBot.Logging
 {
 	public interface ILog
 	{
-		void Error(Exception e);
-		void Info(string message);
+		void Error(Exception e, string template = "", params object[] props);
+		void Info(string message, params object[] props);
 	}
 }
