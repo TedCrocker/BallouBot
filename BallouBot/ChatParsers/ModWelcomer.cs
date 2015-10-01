@@ -34,7 +34,7 @@ namespace BallouBot.ChatParsers
 		{
 			if (!message.User.Contains("twitch") && !message.User.Contains("balloubot"))
 			{
-				var user = _dataSource.Repository<User>().Get(message.User);
+				var user = await _dataSource.Repository<User>().Get(message.User);
 				if (user != null)
 				{
 					if (ShouldSendMessage(message, user))

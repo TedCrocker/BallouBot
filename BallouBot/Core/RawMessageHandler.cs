@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using BallouBot.Data;
 using BallouBot.Interfaces;
 using BallouBot.Logging;
@@ -40,47 +42,84 @@ namespace BallouBot.Core
 
 		private static async void MakeSureUserIsBuilt(Message parsedMessage, ILog logger)
 		{
-			if (_useresToIgnore.Contains(parsedMessage.User))
+			if (parsedMessage.Command == Constants.UserStateCommand && !_useresToIgnore.Contains(parsedMessage.User))
 			{
-				return;
+				await HandleUserStateCommand(parsedMessage, logger);
 			}
-			if (parsedMessage.Command == Constants.UserStateCommand)
+			if (parsedMessage.Command == Constants.ModeCommand)
+			{
+				await HandleModeCommand(parsedMessage, logger);
+			}
+		}
+
+		private static async Task HandleUserStateCommand(Message parsedMessage, ILog logger)
+		{
+			var dataStore = PluginStore.Container.GetExport<IDataSource>().Value;
+			var repository = dataStore.Repository<User>();
+			var user = await repository.Get(parsedMessage.User);
+
+			if (user == null)
+			{
+				user = await CreateUser(parsedMessage.User, logger, repository);
+			}
+
+			await CreateChannelForUser(parsedMessage, user, repository);
+			if (parsedMessage.Tags.ContainsKey("user-type") && parsedMessage.Tags["user-type"] == "mod")
+			{
+				user.Channels[parsedMessage.Channel].IsModerator = true;
+				await repository.Update(user.Id, user);
+			}
+		}
+
+		private static async Task CreateChannelForUser(Message parsedMessage, User user, IRepository<User> repository)
+		{
+			if (!user.Channels.ContainsKey(parsedMessage.Channel))
+			{
+				user.Channels.Add(parsedMessage.Channel, new UserChannel()
+				{
+					Name = parsedMessage.Channel
+				});
+				await repository.Update(user.Id, user);
+			}
+		}
+
+		private static async Task<User> CreateUser(string userID, ILog logger, IRepository<User> repository)
+		{
+			User user = new User()
+			{
+				Id = userID,
+				Channels = new ConcurrentDictionary<string, UserChannel>(),
+				Data = new ConcurrentDictionary<string, object>()
+			};
+
+			var api = new TwitchApi();
+			try
+			{
+				await api.SetUserInfo(user);
+				await repository.Create(user);
+			}
+			catch (Exception e)
+			{
+				logger.Error(e);
+			}
+
+			return user;
+		}
+
+		private static async Task HandleModeCommand(Message parsedMessage, ILog logger)
+		{
+			if (parsedMessage.RawMessage.Contains("+o"))
 			{
 				var dataStore = PluginStore.Container.GetExport<IDataSource>().Value;
-				var user = dataStore.Repository<User>().Get(parsedMessage.User);
-
+				var repository = dataStore.Repository<User>();
+				var userID = parsedMessage.RawMessage.Trim().Split(' ').Last();
+				var user = await repository.Get(userID);
 				if (user == null)
 				{
-					user = new User()
-					{
-						Id = parsedMessage.User,
-						Channels = new ConcurrentDictionary<string, UserChannel>(),
-						Data = new ConcurrentDictionary<string, object>()
-					};
-
-					var api = new TwitchApi();
-					try
-					{
-						api.SetUserInfo(user);
-						dataStore.Repository<User>().Create(user);
-					}
-					catch (Exception e)
-					{
-						logger.Error(e);
-					}
+					user = await CreateUser(userID, logger, repository);
 				}
-
-				if (!user.Channels.ContainsKey(parsedMessage.Channel))
-				{
-					user.Channels.Add(parsedMessage.Channel, new UserChannel()
-					{
-						Name = parsedMessage.Channel
-					});
-				}
-				if (parsedMessage.Tags.ContainsKey("user-type") && parsedMessage.Tags["user-type"] == "mod")
-				{
-					user.Channels[parsedMessage.Channel].IsModerator = true;
-				}
+				await CreateChannelForUser(parsedMessage, user, repository);
+				user.Channels[parsedMessage.Channel].IsModerator = true;
 			}
 		}
 	}

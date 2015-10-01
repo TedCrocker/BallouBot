@@ -6,6 +6,7 @@ namespace BallouBot
 		public const int TimeBetweenUptimeRequestsInMinutes = 5;
 		public const string PrivateMessageCommand = "PRIVMSG";
 		public const string UserStateCommand = "USERSTATE";
+		public const string ModeCommand = "MODE";
 		public const int CommandDequeueTimeLimit = 31;
 		public const int CommandDequeueCommandLimit = 20;
 	}

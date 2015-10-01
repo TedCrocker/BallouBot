@@ -36,11 +36,20 @@ namespace BallouBot.Data
 
 		public async Task<IEnumerable<T>> FindAll()
 		{
+			if (!_cacheHasBeenBuilt)
+			{
+				await BuildCache();
+			}
+
 			return _objectCache.Values;
 		}
 
-		public T Get(string id)
+		public async Task<T> Get(string id)
 		{
+			if (!_cacheHasBeenBuilt)
+			{
+				await BuildCache();
+			}
 			if (_objectCache.ContainsKey(id))
 			{
 				return _objectCache[id];
@@ -62,13 +71,22 @@ namespace BallouBot.Data
 			await Collection.FindOneAndReplaceAsync<T>(idQuery, instance);
 		}
 
-		private async void BuildCache()
+		private object semaphore = new object();
+		private async Task BuildCache()
 		{
-			var all = await Collection.Find(new BsonDocument()).ToListAsync();
-			foreach (var obj in all)
+			lock (semaphore)
 			{
-				var id = obj.ToBsonDocument()["_id"].AsString;
-				_objectCache.Add(id, obj);
+				if (!_cacheHasBeenBuilt)
+				{
+					var all = Collection.Find(new BsonDocument()).ToListAsync();
+					
+					foreach (var obj in all.Result)
+					{
+						var id = obj.ToBsonDocument()["_id"].AsString;
+						_objectCache.Add(id, obj);
+					}
+					_cacheHasBeenBuilt = true;
+				}
 			}
 		}
 

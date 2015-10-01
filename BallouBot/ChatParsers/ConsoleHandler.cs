@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using BallouBot.Interfaces;
@@ -29,14 +30,18 @@ namespace BallouBot.ChatParsers
 
 		public async Task ReceiveMessage(Message message)
 		{
-			if (message.User == Constants.TwitchUser)
+			var tags = message.Tags.Select(s => s.Key + "=" + s.Value);
+			var tagString = string.Join(";", tags);
+
+			Console.WriteLine(message.RawMessage + "||" + tagString);
+			/*if (message.User == Constants.TwitchUser)
 			{
-				Console.WriteLine("|TWITCH| " + message.Suffix);
+				
 			}
 			else
 			{
 				Console.WriteLine(message.Channel + ">" + message.User + ">  " + message.Suffix);
-			}
+			}*/
 		}
 	}
 }

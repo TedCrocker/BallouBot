@@ -48,7 +48,7 @@ namespace BallouBot.Core
 				var tagItems = tag.Split('=');
 				if (tagItems.Length == 2)
 				{
-					message.Tags.Add(tagItems[0], tagItems[1]);
+					message.Tags.Add(tagItems[0].Trim(), tagItems[1].Trim());
 				}
 			}
 
