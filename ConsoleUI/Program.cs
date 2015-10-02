@@ -21,7 +21,7 @@ namespace ConsoleUI
 				UserName = config.Nickname
 			};
 
-			var setup = new PluginStore();
+			PluginStore.InitializePluginStore();
 
 			var connection = new Connection();
 			connection.Connect(IrcTwitchTv, registrationInfo);
