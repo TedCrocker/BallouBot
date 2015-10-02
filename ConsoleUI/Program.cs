@@ -13,7 +13,10 @@ namespace ConsoleUI
 
 		static void Main(string[] args)
 		{
-			var config = new Config();
+			PluginStore.InitializePluginStore();
+			var commandQueue = PluginStore.Container.GetExport<ICommandQueue>();
+			var config = PluginStore.Container.GetExport<IConfig>().Value;
+			
 			var registrationInfo = new IrcUserRegistrationInfo()
 			{
 				NickName = config.Nickname,
@@ -21,12 +24,9 @@ namespace ConsoleUI
 				UserName = config.Nickname
 			};
 
-			PluginStore.InitializePluginStore();
-
 			var connection = new Connection();
 			connection.Connect(IrcTwitchTv, registrationInfo);
 
-			var commandQueue = PluginStore.Container.GetExport<ICommandQueue>();
 			var loop = new EventLoop();
 			loop.Start(connection.Client, commandQueue.Value);
 		}

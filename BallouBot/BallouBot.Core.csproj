@@ -67,6 +67,10 @@
     <Compile Include="Core\RawMessageHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BallouBot.Config\BallouBot.Config.csproj">
+      <Project>{E2A94128-1A96-4AE2-B77E-71A2234F2BCE}</Project>
+      <Name>BallouBot.Config</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BallouBot.Data\BallouBot.Data.csproj">
       <Project>{50ce7811-8ed8-4173-82a3-fe460a94b0db}</Project>
       <Name>BallouBot.Data</Name>

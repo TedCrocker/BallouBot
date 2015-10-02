@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BallouBot.Config;
 using TwixelAPI;
 
 namespace BallouBot.Twitch
 {
-	public class TwitchApi
+	public class TwitchApi : ITwitchApi
 	{
 		private readonly Twixel _twixel;
 
-		public TwitchApi()
+		public TwitchApi(IConfig config)
 		{
-			var config = new Config.Config();
 			_twixel = new Twixel(config.TwitchClientID, config.TwitchRedirectUrl);
 		}
 

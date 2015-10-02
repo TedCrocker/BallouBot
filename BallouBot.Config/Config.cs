@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace BallouBot.Config
 {
-	public class Config
+	public class Config : IConfig
 	{
 		public Config()
 		{

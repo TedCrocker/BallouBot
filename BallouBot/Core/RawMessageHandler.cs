@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BallouBot.Config;
 using BallouBot.Data;
 using BallouBot.Interfaces;
 using BallouBot.Logging;
@@ -92,7 +93,7 @@ namespace BallouBot.Core
 				Data = new ConcurrentDictionary<string, object>()
 			};
 
-			var api = new TwitchApi();
+			var api = PluginStore.Container.GetExport<ITwitchApi>().Value;
 			try
 			{
 				await api.SetUserInfo(user);

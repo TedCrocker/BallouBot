@@ -2,9 +2,11 @@
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Registration;
+using BallouBot.Config;
 using BallouBot.Data;
 using BallouBot.Interfaces;
 using BallouBot.Logging;
+using BallouBot.Twitch;
 
 namespace BallouBot.Core
 {
@@ -16,25 +18,35 @@ namespace BallouBot.Core
 		{
 			InitializePluginStore((builder, aggregateCatalog) =>
 			{
+				builder.ForType<Config.Config>()
+					.Export<IConfig>()
+					.SetCreationPolicy(CreationPolicy.Shared);
+
 				builder.ForType<CommandQueue>()
 				.Export<ICommandQueue>()
 				.SetCreationPolicy(CreationPolicy.Shared);
 
-					builder.ForType<DataSource>()
-						.Export<IDataSource>()
-						.SetCreationPolicy(CreationPolicy.Shared);
+				builder.ForType<DataSource>()
+					.Export<IDataSource>()
+					.SetCreationPolicy(CreationPolicy.Shared);
 
-					builder.ForTypesDerivedFrom<IChatParser>()
-						.Export<IChatParser>()
-						.SelectConstructor(cinfo => cinfo[0]);
+				builder.ForTypesDerivedFrom<IChatParser>()
+					.Export<IChatParser>()
+					.SelectConstructor(cinfo => cinfo[0]);
 
-					builder.ForType<Log>()
-						.Export<ILog>()
-						.SetCreationPolicy(CreationPolicy.Shared);
+				builder.ForType<Log>()
+					.Export<ILog>()
+					.SetCreationPolicy(CreationPolicy.Shared);
+
+				builder.ForType<TwitchApi>()
+					.Export<ITwitchApi>()
+					.SetCreationPolicy(CreationPolicy.Shared);
 
 				aggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(PluginStore).Assembly, builder));
 				aggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(IDataSource).Assembly, builder));
 				aggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ILog).Assembly, builder));
+				aggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(ITwitchApi).Assembly, builder));
+				aggregateCatalog.Catalogs.Add(new AssemblyCatalog(typeof(IConfig).Assembly, builder));
 			});
 		}
 

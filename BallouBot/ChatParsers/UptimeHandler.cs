@@ -2,6 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BallouBot.Config;
+using BallouBot.Core;
 using BallouBot.Interfaces;
 using BallouBot.Twitch;
 
@@ -36,7 +38,7 @@ namespace BallouBot.ChatParsers
 
 				if (sendMessage)
 				{
-					var twitchApi = new TwitchApi();
+					var twitchApi = PluginStore.Container.GetExport<ITwitchApi>().Value;
 					var uptime = await twitchApi.GetUptime(message.Channel.Substring(1));
 					if (uptime.HasValue)
 					{
