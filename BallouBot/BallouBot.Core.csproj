@@ -55,6 +55,7 @@
     <Compile Include="Core\ConnectionEvents.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Core\EventLoop.cs" />
+    <Compile Include="Core\UserManager.cs" />
     <Compile Include="Interfaces\IChatParser.cs" />
     <Compile Include="Interfaces\ICommandQueue.cs" />
     <Compile Include="Message.cs" />

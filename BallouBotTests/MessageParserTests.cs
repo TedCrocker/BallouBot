@@ -26,6 +26,16 @@ namespace BallouBotTests
 		}
 
 		[Fact]
+		public void CutTwitchStuffOffUserName()
+		{
+			var join = ":balloubot.tmi.twitch.tv!balloubot@balloubot.tmi.twitch.tv JOIN #ballouthebear";
+			var message = MessageParser.ParseIrcMessage(join);
+
+			Assert.NotNull(message);
+			Assert.Equal(message.User, "balloubot");
+		}
+
+		[Fact]
 		public void CanParsePrivateMessages()
 		{
 			var privMessage = ":ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :books";

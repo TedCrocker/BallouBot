@@ -34,6 +34,12 @@ namespace BallouBot
 						var split = Prefix.Split('!').First();
 						_userName = split.Substring(0);
 					}
+
+					var index = _userName.IndexOf("." + Constants.TwitchUser);
+					if (index > -1)
+					{
+						_userName = _userName.Substring(0, index);
+					}
 				}
 
 				return _userName;
