@@ -57,10 +57,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandQueueTests.cs" />
+    <Compile Include="LinkSpamHandlerTests.cs" />
     <Compile Include="MessageHelpersTests.cs" />
     <Compile Include="MessageParserTests.cs" />
     <Compile Include="Mocks\MockCommandQueue.cs" />
     <Compile Include="Mocks\MockConfig.cs" />
+    <Compile Include="Mocks\MockDataSource.cs" />
     <Compile Include="Mocks\MockLogger.cs" />
     <Compile Include="Mocks\MockRepository.cs" />
     <Compile Include="Mocks\MockTwitchApi.cs" />
