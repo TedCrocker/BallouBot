@@ -13,9 +13,11 @@ namespace BallouBot.ChatParsers
 	{
 		private readonly ICommandQueue _commandQueue;
 		private IDictionary<string, DateTime> _lastRequests;
+		private ITwitchApi _twitchApi;
 
-		public UptimeHandler(ICommandQueue commandQueue)
+		public UptimeHandler(ICommandQueue commandQueue, ITwitchApi twitchApi)
 		{
+			_twitchApi = twitchApi;
 			_commandQueue = commandQueue;
 			_lastRequests = new ConcurrentDictionary<string, DateTime>();
 		}
@@ -38,8 +40,7 @@ namespace BallouBot.ChatParsers
 
 				if (sendMessage)
 				{
-					var twitchApi = PluginStore.Container.GetExport<ITwitchApi>().Value;
-					var uptime = await twitchApi.GetUptime(message.Channel.Substring(1));
+					var uptime = await _twitchApi.GetUptime(message.Channel.Substring(1));
 					if (uptime.HasValue)
 					{
 						_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, "Uptime: " + uptime.Value.ToString()));

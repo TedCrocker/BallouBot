@@ -19,7 +19,7 @@ namespace BallouBot
 			Tags = new ConcurrentDictionary<string,string>();
 		}
 
-	public string User
+		public string User
 		{
 			get
 			{

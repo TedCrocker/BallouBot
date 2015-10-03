@@ -7,14 +7,15 @@ namespace BallouBotTests.Mocks
 {
 	public class MockTwitchApi : ITwitchApi
 	{
-		public Task SetUserInfo(User user)
+		public async Task SetUserInfo(User user)
 		{
-			throw new NotImplementedException();
+			user.Name = user.Id.ToUpper();
 		}
 
-		public Task<TimeSpan?> GetUptime(string channel)
+		public async Task<TimeSpan?> GetUptime(string channel)
 		{
-			throw new NotImplementedException();
+			TimeSpan? timeSpan = DateTime.UtcNow - DateTime.UtcNow.AddHours(-2);
+			return timeSpan;
 		}
 	}
 }
