@@ -37,7 +37,12 @@ namespace BallouBot.ChatParsers
 				var user = await _dataSource.Repository<User>().Get(message.User);
 				if (user != null)
 				{
-					if (ShouldSendMessage(message, user))
+					if (ShouldSendFirstTimeWelcomeMessage(message, user))
+					{
+						var honorific = _honorifics.OrderBy(n => Guid.NewGuid()).First();
+						_commandQueue.EnqueueCommand("PRIVMSG " + message.Channel + " :Welcome to the channel " + user.Name + honorific + ".");
+					}
+					else if (ShouldSendWelcomeBackMessage(message, user))
 					{
 						var honorific = _honorifics.OrderBy(n => Guid.NewGuid()).First();
 						_commandQueue.EnqueueCommand("PRIVMSG " + message.Channel + " :Welcome back " + user.Name + honorific + ".");
@@ -49,21 +54,20 @@ namespace BallouBot.ChatParsers
 			}
 		}
 
-		private static bool ShouldSendMessage(Message message, User user)
+		private static bool ShouldSendFirstTimeWelcomeMessage(Message message, User user)
+		{
+			return !user.Data.ContainsKey(message.Channel + "-lastMessage");
+		}
+
+		private static bool ShouldSendWelcomeBackMessage(Message message, User user)
 		{
 			var shouldSendMessage = false;
-			if (!user.Data.ContainsKey(message.Channel + "-lastMessage"))
+			var time = (DateTime) user.Data[message.Channel + "-lastMessage"];
+			if ((DateTime.UtcNow - time).TotalHours > 8)
 			{
 				shouldSendMessage = true;
 			}
-			else
-			{
-				var time = (DateTime) user.Data[message.Channel + "-lastMessage"];
-				if ((DateTime.UtcNow - time).TotalHours > 8)
-				{
-					shouldSendMessage = true;
-				}
-			}
+			
 			return shouldSendMessage;
 		}
 	}
