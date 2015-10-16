@@ -58,7 +58,8 @@ namespace BallouBot.ChatParsers
 			var userIsModOrPermitted = await IsUserMod(message.User, message.Channel) || await DoesUserHavePermission(message.User, message.Channel);
 			if (!userIsModOrPermitted)
 			{
-				_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, ".timeout " + message.User + " 1"), QueuePriority.High);
+				_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, ".timeout " + message.User + " 5"), QueuePriority.High);
+				_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, message.User + " you baka! Don't post links unless permitted!"));
 			}
 		}
 
