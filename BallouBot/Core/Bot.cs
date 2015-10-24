@@ -31,6 +31,11 @@ namespace BallouBot.Core
 					_connection = new Connection();
 					_connection.Connect(IrcTwitchTv, registrationInfo);
 
+					foreach (var channel in config.Channels)
+					{
+						commandQueue.Value.EnqueueCommand("JOIN " + channel);
+					}
+
 					_loop = new EventLoop();
 					_loop.Start(_connection.Client, commandQueue.Value);
 

@@ -13,6 +13,7 @@ namespace BallouBot.Core
 			var parsedMessage = MessageParser.ParseIrcMessage(rawMessage);
 			var chatParsers = PluginStore.Container.GetExports<IChatParser>();
 			var logger = PluginStore.Container.GetExport<ILog>().Value;
+			logger.Info(rawMessage);
 
 			var userManager = new UserManager();
 			await userManager.UpdateOrCreateUser(parsedMessage);
