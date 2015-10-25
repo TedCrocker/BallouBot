@@ -5,7 +5,7 @@ namespace BallouBot.Core
 {
 	public class EventLoop
 	{
-		private bool stopRunning = false;
+		private volatile bool stopRunning = false;
 
 		public void Start(TwitchIrcClient client, ICommandQueue queue)
 		{

@@ -1,4 +1,5 @@
-﻿using BallouBot.Config;
+﻿using System.Threading;
+using BallouBot.Config;
 using BallouBot.Interfaces;
 using IrcDotNet;
 
@@ -36,8 +37,15 @@ namespace BallouBot.Core
 						commandQueue.Value.EnqueueCommand("JOIN " + channel);
 					}
 
+
+					
 					_loop = new EventLoop();
-					_loop.Start(_connection.Client, commandQueue.Value);
+					var thread = new Thread(() =>
+					{
+						_loop.Start(_connection.Client, commandQueue.Value);
+					});
+					thread.IsBackground = true;
+					thread.Start();
 
 					IsRunning = true;
 				}
@@ -53,6 +61,7 @@ namespace BallouBot.Core
 				{
 					_connection.Dispose();
 					_loop.Stop();
+					IsRunning = false;
 				}
 			}
 		}

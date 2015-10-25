@@ -40,9 +40,7 @@ namespace BallouBot.WPF
 			btnStartStop.IsEnabled = false;
 			if (!_botStarted)
 			{
-				_botThread = new Thread(_bot.Start);
-				_botThread.IsBackground = true;
-				_botThread.Start();
+				_bot.Start();
 				btnStartStop.Content = "Stop";
 				_botStarted = true;
 			}
