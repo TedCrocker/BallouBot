@@ -67,6 +67,7 @@
     <Compile Include="Mocks\MockRepository.cs" />
     <Compile Include="Mocks\MockTwitchApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StrawPollTests.cs" />
     <Compile Include="UptimeHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +86,10 @@
     <ProjectReference Include="..\BallouBot.Logging\BallouBot.Logging.csproj">
       <Project>{336bdac2-0122-43ce-8d78-15b2f899e89f}</Project>
       <Name>BallouBot.Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BallouBot.Poll\BallouBot.Poll.csproj">
+      <Project>{102d5b5a-2fa7-4588-a09f-0302f1fcc052}</Project>
+      <Name>BallouBot.Poll</Name>
     </ProjectReference>
     <ProjectReference Include="..\BallouBot.Twitch\BallouBot.Twitch.csproj">
       <Project>{9b3e671a-fc3f-4452-8cca-c9a5b780365a}</Project>
