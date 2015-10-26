@@ -6,16 +6,12 @@ using BallouBot.Interfaces;
 
 namespace BallouBot.ChatParsers
 {
-	public class LinkSpamFilter : IChatParser
+	public class LinkSpamFilter : ModChatParser, IChatParser
 	{
-		private readonly IDataSource _dataSource;
-		private readonly ICommandQueue _commandQueue;
 		private static readonly Regex WebUrlRegex = new Regex(@"(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'"".,<>?«»“”‘’]))");
 
-		public LinkSpamFilter(ICommandQueue commandQueue, IDataSource dataSource)
+		public LinkSpamFilter(ICommandQueue commandQueue, IDataSource dataSource) : base(commandQueue, dataSource)
 		{
-			_commandQueue = commandQueue;
-			_dataSource = dataSource;
 		}
 
 		public async Task ReceiveMessage(Message message)
@@ -61,18 +57,6 @@ namespace BallouBot.ChatParsers
 				_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, ".timeout " + message.User + " 5"), QueuePriority.High);
 				_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, message.User + " you baka! Don't post links unless permitted!"));
 			}
-		}
-
-		private async Task<bool> IsUserMod(string userId, string channel)
-		{
-			var isMod = false;
-			var user = await _dataSource.Repository<User>().Get(userId);
-
-			if (user?.Channels != null && user.Channels.ContainsKey(channel) && user.Channels[channel].IsModerator)
-			{
-				isMod = true;
-			}
-			return isMod;
 		}
 
 		private async Task<bool> DoesUserHavePermission(string userId, string channel)
