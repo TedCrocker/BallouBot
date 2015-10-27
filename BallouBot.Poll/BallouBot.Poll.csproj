@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BallouBot.Poll</RootNamespace>
     <AssemblyName>BallouBot.Poll</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +36,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PollHandler.cs" />
+    <Compile Include="PollHelpers.cs" />
     <Compile Include="StrawPollPostResultModel.cs" />
     <Compile Include="IPoll.cs" />
     <Compile Include="PollResult.cs" />
@@ -53,6 +57,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BallouBot.Data\BallouBot.Data.csproj">
+      <Project>{50ce7811-8ed8-4173-82a3-fe460a94b0db}</Project>
+      <Name>BallouBot.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BallouBot\BallouBot.Core.csproj">
+      <Project>{ab5084da-44b0-42fb-acf3-a38090d4edb9}</Project>
+      <Name>BallouBot.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

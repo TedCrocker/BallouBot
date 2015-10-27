@@ -19,7 +19,7 @@ namespace BallouBot.WPF
 		private bool _botStarted = false;
 		private static Bot _bot = null;
 		private Thread _botThread;
-		private ConcurrentObservableCollection<string> _itemsSource;
+		private readonly ConcurrentObservableCollection<string> _itemsSource;
 
 		public MainWindow()
 		{

@@ -51,7 +51,6 @@
     <Compile Include="ChatParsers\ConsoleHandler.cs" />
     <Compile Include="ChatParsers\LinkSpamFilter.cs" />
     <Compile Include="ChatParsers\ModChatParser.cs" />
-    <Compile Include="ChatParsers\PollHandler.cs" />
     <Compile Include="ChatParsers\UptimeHandler.cs" />
     <Compile Include="Core\Bot.cs" />
     <Compile Include="Core\CommandQueue.cs" />

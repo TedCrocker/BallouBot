@@ -64,7 +64,7 @@ namespace BallouBot.ChatParsers
 			var isPermitted = false;
 			var user = await _dataSource.Repository<User>().Get(userId);
 
-			if (user.Data.ContainsKey(channel + "-hasLinkPermission"))
+			if (user != null && user.Data.ContainsKey(channel + "-hasLinkPermission"))
 			{
 				isPermitted = true;
 				user.Data.Remove(channel + "-hasLinkPermission");

@@ -1,11 +1,19 @@
 ﻿using System.Collections.Generic;
+using BallouBot.Core;
+using BallouBot.Data;
 using BallouBot.Poll;
+using BallouBotTests.Mocks;
 using Xunit;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition.Registration;
+using System.Linq;
 
 namespace BallouBotTests
 {
 	public class StrawPollTests
 	{
+
 		[Fact]
 		public async void CanCreatePoll()
 		{
@@ -23,8 +31,86 @@ namespace BallouBotTests
 
 			Assert.NotSame("", id);
 
-			var pollModel = await poll.Fetch(id);
+			var pollModel = await poll.Fetch(id.Split('/').Last());
 			Assert.NotNull(pollModel);
+		}
+
+		[Fact]
+		public void CanParsePollMessage()
+		{
+			var pollUserRequest = "!poll \"Do you like big butts?\";\"Yes\";\"No\"";
+			var result = PollHelpers.MapStringToPostModel(pollUserRequest);
+
+			Assert.Equal(result.Item1, "Do you like big butts?");
+			Assert.Equal(result.Item2.Count, 2);
+		}
+
+		[Fact]
+		public async void PollHandlerRejectsOnlyOneOption()
+		{
+			var commandQ = new MockCommandQueue();
+			var dataSource = new MockDataSource();
+			var repo = dataSource.Repository<User>() as MockRepository<User>;
+			repo.ObjectCache.Add("ballouthebear", new User()
+			{
+				Channels = new Dictionary<string, UserChannel>()
+				{
+					{
+						"#ballouthebear", new UserChannel()
+						{
+							IsModerator = true
+						}
+					}
+
+				}
+			});
+			var rawMessage = "@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :!poll \"Do you like big butts?\";\"Yes\"";
+			var message = MessageParser.ParseIrcMessage(rawMessage);
+			var pollHandler = new PollHandler(commandQ, dataSource);
+
+			await pollHandler.ReceiveMessage(message);
+			var result = commandQ.DequeueCommand();
+
+			Assert.NotNull(result);
+			Assert.NotEqual("", result);
+			Assert.Contains("You must have at least two options!", result);
+		}
+
+		[Fact]
+		public async void PollHandlerCanCreateAndPostPoll()
+		{
+			PluginStore.InitializePluginStore((builder, catalog) =>
+			{
+				builder.ForType<MockPoll>().Export<IPoll>();
+				catalog.Catalogs.Add(new AssemblyCatalog(typeof(IPoll).Assembly, builder));
+				catalog.Catalogs.Add(new AssemblyCatalog(typeof(MockPoll).Assembly, builder));
+			});
+			var commandQ = new MockCommandQueue();
+			var dataSource = new MockDataSource();
+			var repo = dataSource.Repository<User>() as MockRepository<User>;
+			repo.ObjectCache.Add("ballouthebear", new User()
+			{
+				Channels = new Dictionary<string, UserChannel>()
+				{
+					{
+						"#ballouthebear", new UserChannel()
+						{
+							IsModerator = true
+						}
+					}
+
+				}
+			});
+			var rawMessage = "@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :!poll \"Do you like big butts?\";\"Yes\";\"No\"";
+			var message = MessageParser.ParseIrcMessage(rawMessage);
+			var pollHandler = new PollHandler(commandQ, dataSource);
+
+			await pollHandler.ReceiveMessage(message);
+			var result = commandQ.DequeueCommand();
+
+			Assert.NotNull(result);
+			Assert.NotEqual("", result);
+			Assert.Contains("Do you like big butts?", result);
 		}
 	}
 }
