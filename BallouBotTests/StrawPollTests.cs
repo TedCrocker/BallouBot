@@ -6,6 +6,7 @@ using BallouBotTests.Mocks;
 using Xunit;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition.Primitives;
 using System.ComponentModel.Composition.Registration;
 using System.Linq;
 
@@ -13,7 +14,6 @@ namespace BallouBotTests
 {
 	public class StrawPollTests
 	{
-
 		[Fact]
 		public async void CanCreatePoll()
 		{
@@ -79,12 +79,7 @@ namespace BallouBotTests
 		[Fact]
 		public async void PollHandlerCanCreateAndPostPoll()
 		{
-			PluginStore.InitializePluginStore((builder, catalog) =>
-			{
-				builder.ForType<MockPoll>().Export<IPoll>();
-				catalog.Catalogs.Add(new AssemblyCatalog(typeof(IPoll).Assembly, builder));
-				catalog.Catalogs.Add(new AssemblyCatalog(typeof(MockPoll).Assembly, builder));
-			});
+			PluginStore.InitializePluginStoreNew(builder => new AssemblyCatalog(GetType().Assembly, builder));
 			var commandQ = new MockCommandQueue();
 			var dataSource = new MockDataSource();
 			var repo = dataSource.Repository<User>() as MockRepository<User>;
@@ -111,6 +106,21 @@ namespace BallouBotTests
 			Assert.NotNull(result);
 			Assert.NotEqual("", result);
 			Assert.Contains("Do you like big butts?", result);
+		}
+	}
+
+	internal class MockStrawPollPluginRegister : IPluginRegister
+	{
+		public IList<AssemblyCatalog> Register(RegistrationBuilder builder)
+		{
+			builder.ForType<MockPoll>().Export<IPoll>();
+
+			var catalogs = new List<AssemblyCatalog>();
+
+			catalogs.Add(new AssemblyCatalog(typeof(IPoll).Assembly, builder));
+			catalogs.Add(new AssemblyCatalog(typeof(MockPoll).Assembly, builder));
+
+			return catalogs;
 		}
 	}
 }

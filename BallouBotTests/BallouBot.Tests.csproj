@@ -63,6 +63,7 @@
     <Compile Include="LinkSpamHandlerTests.cs" />
     <Compile Include="MessageHelpersTests.cs" />
     <Compile Include="MessageParserTests.cs" />
+    <Compile Include="MockPluginRegister.cs" />
     <Compile Include="Mocks\MockCommandQueue.cs" />
     <Compile Include="Mocks\MockConfig.cs" />
     <Compile Include="Mocks\MockDataSource.cs" />
