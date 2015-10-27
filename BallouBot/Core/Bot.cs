@@ -44,6 +44,7 @@ namespace BallouBot.Core
 					{
 						_loop.Start(_connection.Client, commandQueue.Value);
 					});
+					thread.SetApartmentState(ApartmentState.STA);
 					thread.IsBackground = true;
 					thread.Start();
 
