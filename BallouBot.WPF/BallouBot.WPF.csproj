@@ -124,6 +124,10 @@
       <Project>{336bdac2-0122-43ce-8d78-15b2f899e89f}</Project>
       <Name>BallouBot.Logging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BallouBot.PollPlugin\BallouBot.PollPlugin.csproj">
+      <Project>{102d5b5a-2fa7-4588-a09f-0302f1fcc052}</Project>
+      <Name>BallouBot.PollPlugin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BallouBot\BallouBot.Core.csproj">
       <Project>{ab5084da-44b0-42fb-acf3-a38090d4edb9}</Project>
       <Name>BallouBot.Core</Name>

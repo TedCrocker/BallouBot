@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BallouBot.Poll
+namespace BallouBot.PollPlugin
 {
 	internal class StrawPollPostModel
 	{

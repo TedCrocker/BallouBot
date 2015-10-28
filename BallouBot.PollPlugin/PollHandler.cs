@@ -4,7 +4,7 @@ using BallouBot.Core;
 using BallouBot.Data;
 using BallouBot.Interfaces;
 
-namespace BallouBot.Poll
+namespace BallouBot.PollPlugin
 {
 	public class PollHandler : ModChatParser, IChatParser
 	{

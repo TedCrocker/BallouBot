@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot.Logging", "Ballou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot.WPF", "BallouBot.WPF\BallouBot.WPF.csproj", "{AE6E8FE6-D4E3-445D-A205-6375ABA00C51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot.Poll", "BallouBot.Poll\BallouBot.Poll.csproj", "{102D5B5A-2FA7-4588-A09F-0302F1FCC052}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BallouBot.PollPlugin", "BallouBot.PollPlugin\BallouBot.PollPlugin.csproj", "{102D5B5A-2FA7-4588-A09F-0302F1FCC052}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 
-namespace BallouBot.Poll
+namespace BallouBot.PollPlugin
 {
 	internal class StrawPollPostResultModel
 	{

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BallouBot.Poll;
+using BallouBot.PollPlugin;
 
 namespace BallouBotTests.Mocks
 {

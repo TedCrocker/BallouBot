@@ -2,6 +2,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using BallouBot.Core;
 using BallouBot.Data;
+using BallouBot.Interfaces;
 using Xunit;
 
 namespace BallouBotTests

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using BallouBot.Core;
 using BallouBot.Data;
-using BallouBot.Poll;
+using BallouBot.PollPlugin;
 using BallouBotTests.Mocks;
 using Xunit;
 using System.ComponentModel.Composition;
@@ -9,6 +9,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.ComponentModel.Composition.Registration;
 using System.Linq;
+using BallouBot.Interfaces;
 
 namespace BallouBotTests
 {

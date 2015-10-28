@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace BallouBot.Poll
+namespace BallouBot.PollPlugin
 {
 	public class PollResult
 	{

@@ -59,10 +59,10 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Core\CorePluginRegister.cs" />
     <Compile Include="Core\EventLoop.cs" />
-    <Compile Include="Core\IPluginRegister.cs" />
     <Compile Include="Core\UserManager.cs" />
     <Compile Include="Interfaces\IChatParser.cs" />
     <Compile Include="Interfaces\ICommandQueue.cs" />
+    <Compile Include="Interfaces\IPluginRegister.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="Core\MessageParser.cs" />
     <Compile Include="ChatParsers\ModWelcomer.cs" />

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BallouBot.Poll
+namespace BallouBot.PollPlugin
 {
 	public static class PollHelpers
 	{

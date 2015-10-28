@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace BallouBot.Poll
+namespace BallouBot.PollPlugin
 {
 	public interface IPoll
 	{

@@ -93,9 +93,9 @@
       <Project>{336bdac2-0122-43ce-8d78-15b2f899e89f}</Project>
       <Name>BallouBot.Logging</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BallouBot.Poll\BallouBot.Poll.csproj">
+    <ProjectReference Include="..\BallouBot.PollPlugin\BallouBot.PollPlugin.csproj">
       <Project>{102d5b5a-2fa7-4588-a09f-0302f1fcc052}</Project>
-      <Name>BallouBot.Poll</Name>
+      <Name>BallouBot.PollPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\BallouBot.Twitch\BallouBot.Twitch.csproj">
       <Project>{9b3e671a-fc3f-4452-8cca-c9a5b780365a}</Project>

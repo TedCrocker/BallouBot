@@ -5,6 +5,7 @@ using System.ComponentModel.Composition.Primitives;
 using System.ComponentModel.Composition.Registration;
 using BallouBot.Core;
 using BallouBot.Data;
+using BallouBot.Interfaces;
 using BallouBotTests.Mocks;
 
 namespace BallouBotTests
