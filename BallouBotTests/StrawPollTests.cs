@@ -108,6 +108,40 @@ namespace BallouBotTests
 			Assert.NotEqual("", result);
 			Assert.Contains("Do you like big butts?", result);
 		}
+
+		[Fact]
+		public async void MustWaitBetweenPollCreations()
+		{
+			PluginStore.InitializePluginStoreNew(builder => new AssemblyCatalog(GetType().Assembly, builder));
+			var commandQ = new MockCommandQueue();
+			var dataSource = new MockDataSource();
+			var repo = dataSource.Repository<User>() as MockRepository<User>;
+			repo.ObjectCache.Add("ballouthebear", new User()
+			{
+				Channels = new Dictionary<string, UserChannel>()
+				{
+					{
+						"#ballouthebear", new UserChannel()
+						{
+							IsModerator = true
+						}
+					}
+
+				}
+			});
+			var rawMessage = "@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :!poll \"Do you like big butts?\";\"Yes\";\"No\"";
+			var message = MessageParser.ParseIrcMessage(rawMessage);
+			var pollHandler = new PollHandler(commandQ, dataSource);
+
+			await pollHandler.ReceiveMessage(message);
+			await pollHandler.ReceiveMessage(message);
+			var command1 = commandQ.DequeueCommand();
+			var command2 = commandQ.DequeueCommand();
+
+			Assert.NotEqual("", command2);
+			Assert.Contains("You must wait ", command2);
+			Assert.Contains(" minutes before you can create another poll.", command2);
+		}
 	}
 
 	internal class MockStrawPollPluginRegister : IPluginRegister
