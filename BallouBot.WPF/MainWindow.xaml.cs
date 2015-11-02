@@ -44,7 +44,6 @@ namespace BallouBot.WPF
 			};
 
 			_bot = new Bot();
-			PluginStore.InitializePluginStore();
 		}
 
 		private void btnStartStop_Click(object sender, RoutedEventArgs e)

@@ -1,4 +1,7 @@
-﻿using System.Threading;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using BallouBot.Config;
 using BallouBot.Interfaces;
 using IrcDotNet;
@@ -12,6 +15,42 @@ namespace BallouBot.Core
 		private Connection _connection;
 		private EventLoop _loop;
 		private object _lock = new object();
+
+		public Bot()
+		{
+			InitializePluginStore();
+		}
+
+		public void InitializePluginStore()
+		{
+			PluginStore.InitializePluginStore();
+			SetParsers();
+		}
+
+		private void SetParsers()
+		{
+			foreach (var parser in GetAvailableChatParsers())
+			{
+				RawMessageHandler.Parsers.Add(parser);
+			}
+		}
+
+		public void SetParser(ICollection<IChatParser> chatParsers)
+		{
+			var bag = new ConcurrentBag<IChatParser>();
+			foreach (var parser in chatParsers)
+			{
+				bag.Add(parser);
+			}
+
+			Interlocked.Exchange(ref RawMessageHandler.Parsers, bag);
+		}
+
+		public IList<IChatParser> GetAvailableChatParsers()
+		{
+			var parsers = PluginStore.Container.GetExports<IChatParser>();
+			return parsers.Select(parser => parser.Value).ToList();
+		}
 
 		public void Start()
 		{
@@ -36,8 +75,6 @@ namespace BallouBot.Core
 					{
 						commandQueue.Value.EnqueueCommand("JOIN " + channel);
 					}
-
-
 					
 					_loop = new EventLoop();
 					var thread = new Thread(() =>
