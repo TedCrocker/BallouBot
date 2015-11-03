@@ -14,7 +14,8 @@ namespace BallouBot.Core
 		public static bool IsRunning = false;
 		private Connection _connection;
 		private EventLoop _loop;
-		private object _lock = new object();
+		private readonly object _startLock = new object();
+		private readonly object _parserLock = new object();
 
 		public Bot()
 		{
@@ -24,28 +25,33 @@ namespace BallouBot.Core
 		public void InitializePluginStore()
 		{
 			PluginStore.InitializePluginStore();
-			SetParsers();
+			UpdateParsers();
 		}
 
-		private void SetParsers()
+		private void UpdateParsers()
 		{
-			foreach (var parser in GetAvailableChatParsers())
+			lock (_parserLock)
 			{
-				RawMessageHandler.Parsers.Add(parser);
+				foreach (var parser in GetAvailableChatParsers())
+				{
+					var parserName = parser.GetType().Name;
+					if (!RawMessageHandler.Parsers.Select(p => p.ToString()).Contains(parserName))
+					{
+						RawMessageHandler.Parsers.Add(new ChatParserContainer()
+						{
+							IsEnabled = true,
+							Parser = parser
+						});
+					}
+				}
 			}
 		}
 
-		public void SetParser(ICollection<IChatParser> chatParsers)
+		public ConcurrentBag<ChatParserContainer> GetChatParserContainers()
 		{
-			var bag = new ConcurrentBag<IChatParser>();
-			foreach (var parser in chatParsers)
-			{
-				bag.Add(parser);
-			}
-
-			Interlocked.Exchange(ref RawMessageHandler.Parsers, bag);
+			return RawMessageHandler.Parsers;
 		}
-
+		
 		public IList<IChatParser> GetAvailableChatParsers()
 		{
 			var parsers = PluginStore.Container.GetExports<IChatParser>();
@@ -54,7 +60,7 @@ namespace BallouBot.Core
 
 		public void Start()
 		{
-			lock (_lock)
+			lock (_startLock)
 			{
 				if (!IsRunning)
 				{
@@ -93,7 +99,7 @@ namespace BallouBot.Core
 
 		public void Stop()
 		{
-			lock (_lock)
+			lock (_startLock)
 			{
 				if (IsRunning)
 				{

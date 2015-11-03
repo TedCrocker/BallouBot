@@ -53,6 +53,7 @@
     <Compile Include="ChatParsers\ModChatParser.cs" />
     <Compile Include="ChatParsers\UptimeHandler.cs" />
     <Compile Include="Core\Bot.cs" />
+    <Compile Include="Core\ChatParserContainer.cs" />
     <Compile Include="Core\CommandQueue.cs" />
     <Compile Include="Core\Connection.cs" />
     <Compile Include="Core\ConnectionEvents.cs" />

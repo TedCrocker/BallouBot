@@ -64,5 +64,13 @@ namespace BallouBot.WPF
 			}
 			btnStartStop.IsEnabled = true;
 		}
+
+		private ParsersWindow _parsersWindowWindow;
+
+		private void btnShowParsers_Click(object sender, RoutedEventArgs e)
+		{
+			_parsersWindowWindow = new ParsersWindow(_bot);
+			_parsersWindowWindow.Show();
+		}
 	}
 }

@@ -7,7 +7,7 @@ namespace BallouBot.Core
 {
 	public static class RawMessageHandler
 	{
-		internal static ConcurrentBag<IChatParser> Parsers = new ConcurrentBag<IChatParser>();
+		internal static ConcurrentBag<ChatParserContainer> Parsers = new ConcurrentBag<ChatParserContainer>();
 
 		public async static void ProcessRawMessage(string rawMessage)
 		{
@@ -21,13 +21,16 @@ namespace BallouBot.Core
 
 			foreach (var chatParser in Parsers)
 			{
-				try
+				if (chatParser.IsEnabled)
 				{
-					await chatParser.ReceiveMessage(parsedMessage);
-				}
-				catch (Exception e)
-				{
-					logger.Error(e, $"\r\n{rawMessage}", rawMessage);
+					try
+					{
+						await chatParser.Parser.ReceiveMessage(parsedMessage);
+					}
+					catch (Exception e)
+					{
+						logger.Error(e, $"\r\n{rawMessage}", rawMessage);
+					}
 				}
 			}
 		}
