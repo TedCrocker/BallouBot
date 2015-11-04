@@ -74,9 +74,14 @@
     <Compile Include="PluginStoreTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StrawPollTests.cs" />
+    <Compile Include="TwitchApiTests.cs" />
     <Compile Include="UptimeHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\config.json">
+      <Link>config.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

@@ -10,6 +10,16 @@ namespace BallouBot.Config
 		{
 			var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 			var filePath = Path.Combine(path, "config.json");
+			if (!File.Exists(filePath))
+			{
+				path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase.Substring(8));
+				filePath = Path.Combine(path, "config.json");
+			}
+			if (!File.Exists(filePath))
+			{
+				throw new FileNotFoundException("Could not find the config.json file!");
+			}
+
 			var jsonString = File.ReadAllText(filePath);
 			JsonConvert.PopulateObject(jsonString, this);
 		}
