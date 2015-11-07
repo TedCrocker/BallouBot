@@ -45,7 +45,7 @@ namespace BallouBot.Core
 		{
 			if (!_processedCommands.IsEmpty)
 			{
-				var now = DateTime.Now;
+				var now = DateTime.UtcNow;
 				DateTime toCompare;
 				_processedCommands.TryPeek(out toCompare);
 
@@ -78,7 +78,7 @@ namespace BallouBot.Core
 
 				if (!string.IsNullOrWhiteSpace(command))
 				{
-					_processedCommands.Enqueue(DateTime.Now);
+					_processedCommands.Enqueue(DateTime.UtcNow);
 				}
 			}
 

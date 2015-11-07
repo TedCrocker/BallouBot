@@ -23,7 +23,7 @@ namespace BallouBot.PollPlugin
 		{
 			if (message.Command == Constants.PrivateMessageCommand && message.Suffix.StartsWith("!poll"))
 			{
-				if ((DateTime.Now - PreviousPoll).TotalMinutes > 5)
+				if ((DateTime.UtcNow - PreviousPoll).TotalMinutes > 5)
 				{
 					var isUserMod = await IsUserMod(message.User, message.Channel);
 					if (isUserMod)
@@ -37,7 +37,7 @@ namespace BallouBot.PollPlugin
 								var poll = PluginStore.Container.GetExport<IPoll>().Value;
 								var url = await poll.Create(pollPostModel.Item1, pollPostModel.Item2);
 								_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, $"{pollPostModel.Item1} :: {url}"));
-								PreviousPoll = DateTime.Now;
+								PreviousPoll = DateTime.UtcNow;
 							}
 							catch (Exception e)
 							{
@@ -53,7 +53,7 @@ namespace BallouBot.PollPlugin
 				}
 				else
 				{
-					var minutesLeft = 5 - (DateTime.Now - PreviousPoll).TotalMinutes;
+					var minutesLeft = 5 - (DateTime.UtcNow - PreviousPoll).TotalMinutes;
 					_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, $"You must wait {minutesLeft} minutes before you can create another poll."));
 				}
 				

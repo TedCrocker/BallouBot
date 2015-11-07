@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using BallouBot.Data;
 using BallouBot.Twitch;
+using User = BallouBot.Data.User;
 
 namespace BallouBotTests.Mocks
 {

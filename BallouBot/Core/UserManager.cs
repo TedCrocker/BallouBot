@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BallouBot.Data;
 using BallouBot.Logging;
 using BallouBot.Twitch;
+using User = BallouBot.Data.User;
 
 namespace BallouBot.Core
 {
