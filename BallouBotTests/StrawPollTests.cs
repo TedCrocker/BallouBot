@@ -1,15 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.Composition.Hosting;
+using System.ComponentModel.Composition.Registration;
+using System.Linq;
 using BallouBot.Core;
 using BallouBot.Data;
+using BallouBot.Interfaces;
 using BallouBot.PollPlugin;
 using BallouBotTests.Mocks;
 using Xunit;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Composition.Primitives;
-using System.ComponentModel.Composition.Registration;
-using System.Linq;
-using BallouBot.Interfaces;
 
 namespace BallouBotTests
 {
@@ -67,7 +65,7 @@ namespace BallouBotTests
 			});
 			var rawMessage = "@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :!poll \"Do you like big butts?\";\"Yes\"";
 			var message = MessageParser.ParseIrcMessage(rawMessage);
-			var pollHandler = new PollHandler(commandQ, dataSource);
+			var pollHandler = new PollHandler(commandQ, dataSource, new MockLogger());
 
 			await pollHandler.ReceiveMessage(message);
 			var result = commandQ.DequeueCommand();
@@ -99,7 +97,7 @@ namespace BallouBotTests
 			});
 			var rawMessage = "@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :!poll \"Do you like big butts?\";\"Yes\";\"No\"";
 			var message = MessageParser.ParseIrcMessage(rawMessage);
-			var pollHandler = new PollHandler(commandQ, dataSource);
+			var pollHandler = new PollHandler(commandQ, dataSource, new MockLogger());
 
 			await pollHandler.ReceiveMessage(message);
 			var result = commandQ.DequeueCommand();
@@ -131,7 +129,7 @@ namespace BallouBotTests
 			});
 			var rawMessage = "@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :!poll \"Do you like big butts?\";\"Yes\";\"No\"";
 			var message = MessageParser.ParseIrcMessage(rawMessage);
-			var pollHandler = new PollHandler(commandQ, dataSource);
+			var pollHandler = new PollHandler(commandQ, dataSource, new MockLogger());
 
 			await pollHandler.ReceiveMessage(message);
 			await pollHandler.ReceiveMessage(message);

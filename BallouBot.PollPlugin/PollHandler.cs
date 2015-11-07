@@ -4,16 +4,20 @@ using BallouBot.ChatParsers;
 using BallouBot.Core;
 using BallouBot.Data;
 using BallouBot.Interfaces;
+using BallouBot.Logging;
 
 namespace BallouBot.PollPlugin
 {
 	public class PollHandler : ModChatParser, IChatParser
 	{
 		private static DateTime PreviousPoll = DateTime.MinValue;
-		public PollHandler(ICommandQueue commandQueue, IDataSource dataSource) : base(commandQueue, dataSource)
+		private ILog _logger;
+
+		public PollHandler(ICommandQueue commandQueue, IDataSource dataSource, ILog logger) : base(commandQueue, dataSource)
 		{
+			_logger = logger;
 		}
-		
+
 		// poll syntax: !poll "Question"; "Option 1"; "Option 2"
 		public async Task ReceiveMessage(Message message)
 		{
@@ -21,7 +25,6 @@ namespace BallouBot.PollPlugin
 			{
 				if ((DateTime.Now - PreviousPoll).TotalMinutes > 5)
 				{
-					PreviousPoll = DateTime.Now;
 					var isUserMod = await IsUserMod(message.User, message.Channel);
 					if (isUserMod)
 					{
@@ -29,9 +32,18 @@ namespace BallouBot.PollPlugin
 
 						if (pollPostModel.Item2.Count > 1)
 						{
-							var poll = PluginStore.Container.GetExport<IPoll>().Value;
-							var url = await poll.Create(pollPostModel.Item1, pollPostModel.Item2);
-							_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, $"{pollPostModel.Item1} :: {url}"));
+							try
+							{
+								var poll = PluginStore.Container.GetExport<IPoll>().Value;
+								var url = await poll.Create(pollPostModel.Item1, pollPostModel.Item2);
+								_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, $"{pollPostModel.Item1} :: {url}"));
+								PreviousPoll = DateTime.Now;
+							}
+							catch (Exception e)
+							{
+								_logger.Error(e);
+                                _commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, "There was an issue creating the poll! So sorry!"));
+							}
 						}
 						else
 						{
