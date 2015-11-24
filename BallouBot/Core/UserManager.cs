@@ -38,12 +38,18 @@ namespace BallouBot.Core
 			if (!_useresToIgnore.Contains(userID))
 			{
 				var user = await GetOrCreateUser(userID);
-
+				await CreateChannelForUser(message, user);
 				if (message.Command == Constants.ModeCommand && message.RawMessage.Contains("+o"))
 				{
-					await CreateChannelForUser(message, user);
+					await MakeUserMod(message, user);
 				}
 			}
+		}
+
+		private async Task MakeUserMod(Message message, User user)
+		{
+			user.Channels[message.Channel].IsModerator = true;
+			await _repoStore.Repository<User>().Update(user.Id, user);
 		}
 
 		private async Task<User> GetOrCreateUser(string userID)
