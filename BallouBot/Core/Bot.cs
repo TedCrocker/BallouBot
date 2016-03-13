@@ -16,6 +16,7 @@ namespace BallouBot.Core
 		private EventLoop _loop;
 		private readonly object _startLock = new object();
 		private readonly object _parserLock = new object();
+		private AutoResetEvent _autoResetEvent;
 
 		public Bot()
 		{
@@ -66,6 +67,12 @@ namespace BallouBot.Core
 				{
 					var commandQueue = PluginStore.Container.GetExport<ICommandQueue>();
 					var config = PluginStore.Container.GetExport<IConfig>().Value;
+					_autoResetEvent = new AutoResetEvent(false);
+
+					commandQueue.Value.CommandQueued += (sender, args) =>
+					{
+						_autoResetEvent.Set();
+					};
 
 					var registrationInfo = new IrcUserRegistrationInfo()
 					{
@@ -81,8 +88,8 @@ namespace BallouBot.Core
 					{
 						commandQueue.Value.EnqueueCommand("JOIN " + channel);
 					}
-					
-					_loop = new EventLoop();
+
+					_loop = new EventLoop(_autoResetEvent);
 					var thread = new Thread(() =>
 					{
 						_loop.Start(_connection.Client, commandQueue.Value);
@@ -103,6 +110,7 @@ namespace BallouBot.Core
 			{
 				if (IsRunning)
 				{
+					_autoResetEvent.Close();
 					_connection.Dispose();
 					_loop.Stop();
 					IsRunning = false;

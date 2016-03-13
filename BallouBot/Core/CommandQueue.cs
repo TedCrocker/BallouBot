@@ -12,6 +12,8 @@ namespace BallouBot.Core
 
 		private readonly ConcurrentQueue<DateTime> _processedCommands;
 
+		public event EventHandler CommandQueued;
+
 		public CommandQueue()
 		{
 			_lowPriorityQueue = new ConcurrentQueue<string>();
@@ -39,6 +41,7 @@ namespace BallouBot.Core
 					_normalPriorityQueue.Enqueue(command);
 					break;
 			}
+			CommandQueued?.Invoke(this, EventArgs.Empty);
 		}
 
 		private void ClearQueue()

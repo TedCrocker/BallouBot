@@ -1,3 +1,4 @@
+using System.Threading;
 using BallouBot.Interfaces;
 using IrcDotNet;
 
@@ -5,7 +6,13 @@ namespace BallouBot.Core
 {
 	public class EventLoop
 	{
+		public EventLoop(AutoResetEvent resetEvent)
+		{
+			_resetEvent = resetEvent;
+		}
+
 		private volatile bool stopRunning = false;
+		private readonly AutoResetEvent _resetEvent;
 
 		public void Start(TwitchIrcClient client, ICommandQueue queue)
 		{
@@ -13,7 +20,11 @@ namespace BallouBot.Core
 			{
 				var command = queue.DequeueCommand();
 
-				if (command != "exit" && !string.IsNullOrWhiteSpace(command))
+				if (string.IsNullOrWhiteSpace(command))
+				{
+					_resetEvent.WaitOne();
+				}
+				if (command != "exit")
 				{
 					client.SendRawMessage(command);
 				}

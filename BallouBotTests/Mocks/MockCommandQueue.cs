@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BallouBot;
 using BallouBot.Interfaces;
@@ -12,6 +13,8 @@ namespace BallouBotTests.Mocks
 		{
 			_queue = new Queue<string>();
 		}
+
+		public event EventHandler CommandQueued;
 
 		public void EnqueueCommand(string command)
 		{
