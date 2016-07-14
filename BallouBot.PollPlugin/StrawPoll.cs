@@ -8,7 +8,7 @@ namespace BallouBot.PollPlugin
 {
 	public class StrawPoll : IPoll
 	{
-		private const string StrawPollApiUrl = "https://strawpoll.me/api/v2/polls/";
+		private const string StrawPollApiUrl = "https://strawpoll.me/api/v2/polls";
 		private const string StrawPollUrl = "https://strawpoll.me/";
 		
 		public async Task<string> Create(string title, IList<string> options)
@@ -22,7 +22,7 @@ namespace BallouBot.PollPlugin
 			var httpClient = new HttpClient();
 			var stringPost = JsonConvert.SerializeObject(model);
 			var httpContent = new StringContent(stringPost, Encoding.UTF8, "application/json");
-
+			
 			var response = await httpClient.PostAsync(StrawPollApiUrl, httpContent);
 			var responseContent = response.Content.ReadAsStringAsync();
 			var responseModel = JsonConvert.DeserializeObject<StrawPollPostResultModel>(responseContent.Result);
@@ -33,7 +33,7 @@ namespace BallouBot.PollPlugin
 		public async Task<PollResult> Fetch(string id)
 		{
 			var httpClient = new HttpClient();
-			var url = StrawPollApiUrl + id;
+			var url = StrawPollApiUrl + "/" + id;
 			var response = await httpClient.GetAsync(url);
 			var responseContent = response.Content.ReadAsStringAsync();
 			var responseModel = JsonConvert.DeserializeObject<PollResult>(responseContent.Result);
