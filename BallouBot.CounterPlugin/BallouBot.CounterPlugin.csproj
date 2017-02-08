@@ -57,6 +57,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CounterChannelData.cs" />
+    <Compile Include="CounterData.cs" />
     <Compile Include="CounterHandler.cs" />
     <Compile Include="CounterPluginRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

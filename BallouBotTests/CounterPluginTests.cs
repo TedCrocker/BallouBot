@@ -61,6 +61,32 @@ namespace BallouBotTests
 			Assert.Contains("Counter $death reset", response);
 		}
 
+		[Fact]
+		public async void CanIncrementCounter()
+		{
+			var createMessage = MessageParser.ParseIrcMessage(_createMessage);
+			await _counterHandler.ReceiveMessage(createMessage);
+			_mockCommandQueue.DequeueCommand();
+			var incrementMessage = MessageParser.ParseIrcMessage("@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :$death");
+			await _counterHandler.ReceiveMessage(incrementMessage);
+			var response = _mockCommandQueue.DequeueCommand();
+			Assert.NotEmpty(response);
+			Assert.Contains("death 1 times", response);
+		}
+
+		[Fact]
+		public async void CanDecrementCounter()
+		{
+			var createMessage = MessageParser.ParseIrcMessage(_createMessage);
+			await _counterHandler.ReceiveMessage(createMessage);
+			_mockCommandQueue.DequeueCommand();
+			var decrement = MessageParser.ParseIrcMessage("@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :$-death");
+			await _counterHandler.ReceiveMessage(decrement);
+			var response = _mockCommandQueue.DequeueCommand();
+			Assert.NotEmpty(response);
+			Assert.Contains("death -1 times", response);
+		}
+
 		private void AddModerator(IDataSource dataSource)
 		{
 			var repo = dataSource.Repository<User>() as MockRepository<User>;
