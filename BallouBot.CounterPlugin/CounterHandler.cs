@@ -19,6 +19,7 @@ namespace BallouBot.CounterPlugin
 		private const string CREATE_COMMAND = "create";
 		private const string RESET_COMMAND = "reset";
 		private const string DELETE_COMMAND = "delete";
+		private const int SECONDS_BETWEEN_UPDATE = 15;
 
 		public CounterHandler(ICommandQueue commandQueue, IDataSource dataSource) : base(commandQueue, dataSource){}
 
@@ -59,14 +60,14 @@ namespace BallouBot.CounterPlugin
 				{
 					counterData.Count--;
 					await _dataSource.Repository<CounterChannelData>().Update(channelData.Id, channelData);
-					DisplayMessage($"Subtracted: {command.Substring(1)} {counterData.Count} times", message);
+					DisplayMessage($"Subtracted: {counterData.UpdateMessage.Replace("#", counterData.Count.ToString())}", message);
 				}
-				else if ((DateTime.Now - counterData.LastUpdate).Seconds > 30)
+				else if ((DateTime.Now - counterData.LastUpdate).TotalSeconds > SECONDS_BETWEEN_UPDATE)
 				{
 					counterData.Count++;
 					counterData.LastUpdate = DateTime.Now;
 					await _dataSource.Repository<CounterChannelData>().Update(channelData.Id, channelData);
-					DisplayMessage($"{command.Substring(1)} {counterData.Count} times", message);
+					DisplayMessage($"{counterData.UpdateMessage.Replace("#", counterData.Count.ToString())}", message);
 				}
 			}
 		}
@@ -75,7 +76,7 @@ namespace BallouBot.CounterPlugin
 		{
 			var strings = message.Suffix.Substring(8).Trim().Split(' ');
 
-			if (strings.Length == 2)
+			if (strings.Length >= 2)
 			{
 				var channelData = await _dataSource.Repository<CounterChannelData>().Get(message.Channel);
 				if (channelData == null)
@@ -91,7 +92,12 @@ namespace BallouBot.CounterPlugin
 
 				if (strings[0].ToLower() == CREATE_COMMAND)
 				{
-					CreateCounter(strings[1], channelData, message);
+					var updateMessage = $"{strings[1].Substring(1)} # times";
+					if (strings.Length >= 3)
+					{
+						updateMessage = string.Join(" ", strings.Skip(2));
+					}
+					CreateCounter(strings[1], updateMessage, channelData, message);
 				}
 				else if (strings[0].ToLower() == RESET_COMMAND)
 				{
@@ -108,13 +114,10 @@ namespace BallouBot.CounterPlugin
 			}
 			else
 			{
-				DisplayHelpMessage();
+				_commandQueue.EnqueueCommand(MessageHelpers.Whisper(message, "To create a counter: !counter create ${counterName} {optional message where # will be replaced by count}"));
+				_commandQueue.EnqueueCommand(MessageHelpers.Whisper(message, "To reset a counter: !counter reset ${counterName}"));
+				_commandQueue.EnqueueCommand(MessageHelpers.Whisper(message, "To delete a counter: !counter delete ${counterName}"));
 			}
-		}
-
-		private void DisplayHelpMessage()
-		{
-			
 		}
 
 		private void DisplayMessage(string errorMessage, Message message)
@@ -122,14 +125,15 @@ namespace BallouBot.CounterPlugin
 			_commandQueue.EnqueueCommand(MessageHelpers.PrivateMessage(message, errorMessage));
 		}
 
-		private void CreateCounter(string counterName, CounterChannelData channelData, Message message)
+		private void CreateCounter(string counterName, string updateMessage, CounterChannelData channelData, Message message)
 		{
 			var counterData = channelData.Counters.FirstOrDefault(c => c.Name == counterName);
 			if (counterData == null)
 			{
 				channelData.Counters.Add(new CounterData()
 				{
-					Name = counterName
+					Name = counterName,
+					UpdateMessage = updateMessage
 				});
 				_dataSource.Repository<CounterChannelData>().Update(channelData.Id, channelData);
 				DisplayMessage($"Counter {counterName} created", message);

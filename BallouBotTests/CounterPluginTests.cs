@@ -35,6 +35,21 @@ namespace BallouBotTests
 		}
 
 		[Fact]
+		public async void CanCreateCounterWithCustomMessage()
+		{
+			var message = MessageParser.ParseIrcMessage(_createMessage + " Died # times");
+			await _counterHandler.ReceiveMessage(message);
+			_mockCommandQueue.DequeueCommand();
+
+			var incrementMessage = MessageParser.ParseIrcMessage("@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :$death");
+			await _counterHandler.ReceiveMessage(incrementMessage);
+			var response = _mockCommandQueue.DequeueCommand();
+
+			Assert.NotNull(response);
+			Assert.Contains("Died 1 times", response);
+		}
+
+		[Fact]
 		public async void CanDeleteCounter()
 		{
 			var createMessage = MessageParser.ParseIrcMessage(_createMessage);

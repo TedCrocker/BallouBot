@@ -13,5 +13,11 @@ namespace BallouBot
 			var str = $"{Constants.PrivateMessageCommand} {incomingMessage.Channel} :{outgoingMessage}";
 			return str;
 		}
+
+		public static string Whisper(Message incomingMessage, string outgoingMessage)
+		{
+			var str = PrivateMessage(incomingMessage, $"{Constants.WhisperCommand} {incomingMessage.User} {outgoingMessage}");
+			return str;
+		}
 	}
 }
