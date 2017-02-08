@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandQueueTests.cs" />
+    <Compile Include="CounterPluginTests.cs" />
     <Compile Include="LinkSpamHandlerTests.cs" />
     <Compile Include="MessageHelpersTests.cs" />
     <Compile Include="MessageParserTests.cs" />
@@ -106,6 +107,10 @@
     <ProjectReference Include="..\BallouBot.Config\BallouBot.Config.csproj">
       <Project>{e2a94128-1a96-4ae2-b77e-71a2234f2bce}</Project>
       <Name>BallouBot.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BallouBot.CounterPlugin\BallouBot.CounterPlugin.csproj">
+      <Project>{9285c1eb-d0e9-4110-8ee2-9e802148770b}</Project>
+      <Name>BallouBot.CounterPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\BallouBot.Data\BallouBot.Data.csproj">
       <Project>{50ce7811-8ed8-4173-82a3-fe460a94b0db}</Project>

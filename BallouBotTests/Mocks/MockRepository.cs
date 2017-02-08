@@ -21,7 +21,13 @@ namespace BallouBotTests.Mocks
 
 		public async Task Create(T instance)
 		{
-			ObjectCache.Add(instance.GetHashCode().ToString(), instance);
+			var id = typeof(T).GetProperty("Id").GetValue(instance).ToString();
+			if (string.IsNullOrEmpty(id))
+			{
+				id = instance.GetHashCode().ToString();
+			}
+
+			ObjectCache.Add(id, instance);
 		}
 
 		public async Task Update(object id, T instance)
