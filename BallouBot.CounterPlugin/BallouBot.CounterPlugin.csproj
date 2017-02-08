@@ -4,15 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E79316D7-248E-4978-9A1D-5F4AAD5FA398}</ProjectGuid>
+    <ProjectGuid>{9285C1EB-D0E9-4110-8EE2-9E802148770B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BallouBotTests</RootNamespace>
-    <AssemblyName>BallouBotTests</AssemblyName>
+    <RootNamespace>BallouBot.CounterPlugin</RootNamespace>
+    <AssemblyName>BallouBot.CounterPlugin</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -39,7 +37,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="System.ComponentModel.Composition.Registration" />
+    <Reference Include="System.ComponentModel.Composition.registration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Net.Http.2.2.29\lib\net45\System.Net.Http.Extensions.dll</HintPath>
@@ -57,76 +55,24 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
-      <HintPath>..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandQueueTests.cs" />
-    <Compile Include="LinkSpamHandlerTests.cs" />
-    <Compile Include="MessageHelpersTests.cs" />
-    <Compile Include="MessageParserTests.cs" />
-    <Compile Include="MockPluginRegister.cs" />
-    <Compile Include="Mocks\MockCommandQueue.cs" />
-    <Compile Include="Mocks\MockConfig.cs" />
-    <Compile Include="Mocks\MockDataSource.cs" />
-    <Compile Include="Mocks\MockLogger.cs" />
-    <Compile Include="Mocks\MockPoll.cs" />
-    <Compile Include="Mocks\MockRepository.cs" />
-    <Compile Include="Mocks\MockTwitchApi.cs" />
-    <Compile Include="PluginStoreTests.cs" />
+    <Compile Include="CounterPluginRegister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StrawPollTests.cs" />
-    <Compile Include="TwitchApiTests.cs" />
-    <Compile Include="TwitchRestClientTests.cs" />
-    <Compile Include="UptimeHandlerTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\config.json">
-      <Link>config.json</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BallouBot.Config\BallouBot.Config.csproj">
-      <Project>{e2a94128-1a96-4ae2-b77e-71a2234f2bce}</Project>
-      <Name>BallouBot.Config</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BallouBot.Data\BallouBot.Data.csproj">
       <Project>{50ce7811-8ed8-4173-82a3-fe460a94b0db}</Project>
       <Name>BallouBot.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BallouBot.Logging\BallouBot.Logging.csproj">
-      <Project>{336bdac2-0122-43ce-8d78-15b2f899e89f}</Project>
-      <Name>BallouBot.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BallouBot.PollPlugin\BallouBot.PollPlugin.csproj">
-      <Project>{102d5b5a-2fa7-4588-a09f-0302f1fcc052}</Project>
-      <Name>BallouBot.PollPlugin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BallouBot.Twitch\BallouBot.Twitch.csproj">
-      <Project>{9b3e671a-fc3f-4452-8cca-c9a5b780365a}</Project>
-      <Name>BallouBot.Twitch</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BallouBot\BallouBot.Core.csproj">
-      <Project>{AB5084DA-44B0-42FB-ACF3-A38090D4EDB9}</Project>
+      <Project>{ab5084da-44b0-42fb-acf3-a38090d4edb9}</Project>
       <Name>BallouBot.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />

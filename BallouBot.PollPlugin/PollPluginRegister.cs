@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Registration;
-using BallouBot.Core;
 using BallouBot.Interfaces;
 
 namespace BallouBot.PollPlugin

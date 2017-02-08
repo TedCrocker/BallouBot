@@ -14,13 +14,11 @@ namespace BallouBot.Logging
 
 		public Log()
 		{
-			var logConfig = new LoggerConfiguration()
-				.WriteTo.ColoredConsole()
-				.WriteTo.RollingFile("Logs\\balloubot");
-
+			var logConfig = new LoggerConfiguration();
+				
 			if (Observer != null)
 			{
-				logConfig.WriteTo.Observers(observable => observable.Subscribe(Observer));
+				//logConfig.WriteTo.Observers(observable => observable.Subscribe(Observer));
 			}
 
 			_logger = logConfig.CreateLogger();
