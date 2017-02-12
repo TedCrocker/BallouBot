@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BallouBot.ChatParsers;
 using BallouBot.Data;
@@ -45,31 +46,40 @@ namespace BallouBot.CounterPlugin
 		private async Task HandleUserCommand(Message message)
 		{
 			var channelData = await _dataSource.Repository<CounterChannelData>().Get(message.Channel);
-			var command = message.Suffix.Split(' ').First().Trim();
-			var subtractCount = false;
-			if (command.Substring(1,1).StartsWith("-"))
+			//var command = message.Suffix.Split(' ').First().Trim();
+			var pattern = @"(\$[a-zA-Z]*){1}([\+\-]{1})?([0-9])*";
+			var match = Regex.Match(message.Suffix, pattern);
+			if (match.Success)
 			{
-				command = command.Remove(1, 1);
-				subtractCount = true;
+				var command = match.Groups[1].Value;
+				var counterData = channelData?.Counters.FirstOrDefault(c => c.Name == command);
+				if (counterData != null)
+				{
+					bool subtract = match.Groups[2].Success && match.Groups[2].Value == "-";
+					var incrementValue = 1;
+					var isUserMod = await IsUserMod(message.User, message.Channel);
+					if (match.Groups[2].Success && match.Groups[3].Success && isUserMod)
+					{
+						incrementValue = int.Parse(match.Groups[3].Value);
+					}
+
+					if (subtract && isUserMod)
+					{
+						counterData.Count -= incrementValue;
+						await _dataSource.Repository<CounterChannelData>().Update(channelData.Id, channelData);
+						DisplayMessage($"Subtracted: {counterData.UpdateMessage.Replace("#", counterData.Count.ToString())}", message);
+					}
+					else if ((DateTime.Now - counterData.LastUpdate).TotalSeconds > SECONDS_BETWEEN_UPDATE && !subtract)
+					{
+						counterData.Count += incrementValue;
+						counterData.LastUpdate = DateTime.Now;
+						await _dataSource.Repository<CounterChannelData>().Update(channelData.Id, channelData);
+						DisplayMessage($"{counterData.UpdateMessage.Replace("#", counterData.Count.ToString())}", message);
+					}
+				}
 			}
 
-			var counterData = channelData?.Counters.FirstOrDefault(c => c.Name == command);
-			if (counterData != null)
-			{
-				if (subtractCount && await IsUserMod(message.User, message.Channel))
-				{
-					counterData.Count--;
-					await _dataSource.Repository<CounterChannelData>().Update(channelData.Id, channelData);
-					DisplayMessage($"Subtracted: {counterData.UpdateMessage.Replace("#", counterData.Count.ToString())}", message);
-				}
-				else if ((DateTime.Now - counterData.LastUpdate).TotalSeconds > SECONDS_BETWEEN_UPDATE)
-				{
-					counterData.Count++;
-					counterData.LastUpdate = DateTime.Now;
-					await _dataSource.Repository<CounterChannelData>().Update(channelData.Id, channelData);
-					DisplayMessage($"{counterData.UpdateMessage.Replace("#", counterData.Count.ToString())}", message);
-				}
-			}
+			
 		}
 
 		private async Task HandleModeratorCommand(Message message)
