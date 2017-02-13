@@ -95,11 +95,11 @@ namespace BallouBotTests
 			var createMessage = MessageParser.ParseIrcMessage(_createMessage);
 			await _counterHandler.ReceiveMessage(createMessage);
 			_mockCommandQueue.DequeueCommand();
-			var incrementMessage = MessageParser.ParseIrcMessage("@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :$death+6");
+			var incrementMessage = MessageParser.ParseIrcMessage("@color=#FF0000;display-name=BallouTheBear;emotes=;subscriber=0;turbo=0;user-id=30514348;user-type= :ballouthebear!ballouthebear@ballouthebear.tmi.twitch.tv PRIVMSG #ballouthebear :$death+16");
 			await _counterHandler.ReceiveMessage(incrementMessage);
 			var response = _mockCommandQueue.DequeueCommand();
 			Assert.NotEmpty(response);
-			Assert.Contains("death 6 times", response);
+			Assert.Contains("death 16 times", response);
 		}
 
 		[Fact]

@@ -47,7 +47,7 @@ namespace BallouBot.CounterPlugin
 		{
 			var channelData = await _dataSource.Repository<CounterChannelData>().Get(message.Channel);
 			//var command = message.Suffix.Split(' ').First().Trim();
-			var pattern = @"(\$[a-zA-Z]*){1}([\+\-]{1})?([0-9])*";
+			var pattern = @"(\$[a-zA-Z]*){1}([\+\-]{1})?([0-9]*)";
 			var match = Regex.Match(message.Suffix, pattern);
 			if (match.Success)
 			{
