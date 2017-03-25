@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
 
@@ -8,7 +9,9 @@ namespace BallouBot.Config
 	{
 		public Config()
 		{
-			var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+			var assemblyPath = AppDomain.CurrentDomain.BaseDirectory;
+
+			var path = Path.GetDirectoryName(assemblyPath);
 			var filePath = Path.Combine(path, "config.json");
 			if (!File.Exists(filePath))
 			{

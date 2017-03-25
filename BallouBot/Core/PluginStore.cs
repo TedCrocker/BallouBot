@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.ComponentModel.Composition.Registration;
+using System.Reflection;
 using BallouBot.Interfaces;
 
 namespace BallouBot.Core
@@ -19,14 +20,15 @@ namespace BallouBot.Core
 		public static CompositionContainer InitializePluginStoreNew(Func<RegistrationBuilder, ComposablePartCatalog> addAssemblies = null)
 		{
 			var setupBuilder = new RegistrationBuilder();
-			ComposablePartCatalog setupCatalog = null;
+			AggregateCatalog setupCatalogs = new AggregateCatalog();
 			if (addAssemblies == null)
 			{
-				setupCatalog = new DirectoryCatalog(".", setupBuilder);
+				setupCatalogs.Catalogs.Add(new DirectoryCatalog(".", setupBuilder));
+				setupCatalogs.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly(), setupBuilder));
 			}
 			else
 			{
-				setupCatalog = addAssemblies(setupBuilder);
+				setupCatalogs.Catalogs.Add(addAssemblies(setupBuilder));
 			}
 			
 			setupBuilder.ForTypesDerivedFrom<IPluginRegister>()
@@ -34,7 +36,7 @@ namespace BallouBot.Core
 				.SelectConstructor(cinfo => cinfo[0]);
 
 
-			var setupContainer = new CompositionContainer(setupCatalog);
+			var setupContainer = new CompositionContainer(setupCatalogs);
 
 			var aggregateCatalog = new AggregateCatalog();
 			var allCatalogs = new Dictionary<string, AssemblyCatalog>();

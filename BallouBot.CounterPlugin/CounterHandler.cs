@@ -78,8 +78,6 @@ namespace BallouBot.CounterPlugin
 					}
 				}
 			}
-
-			
 		}
 
 		private async Task HandleModeratorCommand(Message message)
