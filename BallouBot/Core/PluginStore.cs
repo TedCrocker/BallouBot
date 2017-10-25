@@ -23,7 +23,7 @@ namespace BallouBot.Core
 			AggregateCatalog setupCatalogs = new AggregateCatalog();
 			if (addAssemblies == null)
 			{
-				setupCatalogs.Catalogs.Add(new DirectoryCatalog(".", setupBuilder));
+				setupCatalogs.Catalogs.Add(new DirectoryCatalog("./Plugins/", setupBuilder));
 				setupCatalogs.Catalogs.Add(new AssemblyCatalog(Assembly.GetExecutingAssembly(), setupBuilder));
 			}
 			else

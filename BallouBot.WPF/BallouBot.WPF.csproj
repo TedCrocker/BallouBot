@@ -146,10 +146,6 @@
       <Project>{336bdac2-0122-43ce-8d78-15b2f899e89f}</Project>
       <Name>BallouBot.Logging</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BallouBot.PollPlugin\BallouBot.PollPlugin.csproj">
-      <Project>{102d5b5a-2fa7-4588-a09f-0302f1fcc052}</Project>
-      <Name>BallouBot.PollPlugin</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BallouBot\BallouBot.Core.csproj">
       <Project>{ab5084da-44b0-42fb-acf3-a38090d4edb9}</Project>
       <Name>BallouBot.Core</Name>
@@ -206,6 +202,13 @@ foreach (var item in filesToCleanup)
   </Target>
   <Import Project="..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.1.6.2\build\dotnet\Costura.Fody.targets')" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y "$(SolutionDir)\BallouBot.PollPlugin\bin\$(Configuration)\BallouBot.Poll.dll" "$(ProjectDir)bin\$(Configuration)\Plugins\"
+xcopy /Y "$(SolutionDir)\BallouBot.PollPlugin\bin\$(Configuration)\BallouBot.Poll.pdb" "$(ProjectDir)bin\$(Configuration)\Plugins\"
+
+xcopy /Y "$(SolutionDir)\BallouBot.CounterPlugin\bin\$(Configuration)\BallouBot.CounterPlugin.dll" "$(ProjectDir)bin\$(Configuration)\Plugins\"
+xcopy /Y "$(SolutionDir)\BallouBot.CounterPlugin\bin\$(Configuration)\BallouBot.CounterPlugin.pdb" "$(ProjectDir)bin\$(Configuration)\Plugins\"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
