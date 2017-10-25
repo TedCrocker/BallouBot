@@ -58,7 +58,7 @@ namespace BallouBot.CounterPlugin
 					bool subtract = match.Groups[2].Success && match.Groups[2].Value == "-";
 					var incrementValue = 1;
 					var isUserMod = await IsUserMod(message.User, message.Channel);
-					if (match.Groups[2].Success && match.Groups[3].Success && isUserMod)
+					if (match.Groups[2].Success && match.Groups[3].Success && !string.IsNullOrWhiteSpace(match.Groups[3].Value) && isUserMod)
 					{
 						incrementValue = int.Parse(match.Groups[3].Value);
 					}
