@@ -1,10 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>BallouBot.Host</RootNamespace>
+    <UserSecretsId>81e6e086-bd03-4aed-9d72-9da8716ea0e5</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

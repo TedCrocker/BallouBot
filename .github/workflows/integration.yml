@@ -1,0 +1,82 @@
+name: Integration Tests (Discord)
+
+on:
+  workflow_dispatch:
+    inputs:
+      timeout_seconds:
+        description: 'Timeout for bot startup (seconds)'
+        required: false
+        default: '20'
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    
+    env:
+      Discord__Token: ${{ secrets.TEST_BOT_TOKEN }}
+      ConnectionStrings__DefaultConnection: "Data Source=balloubot-test.db"
+      TESTER_BOT_TOKEN: ${{ secrets.TESTER_BOT_TOKEN }}
+      TEST_GUILD_ID: ${{ secrets.TEST_GUILD_ID }}
+      TEST_CHANNEL_ID: ${{ secrets.TEST_CHANNEL_ID }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Verify secrets are configured
+        run: |
+          if [ -z "${{ secrets.TEST_BOT_TOKEN }}" ]; then
+            echo "::error::TEST_BOT_TOKEN secret is not set. See docs/INTEGRATION_TESTING.md for setup instructions."
+            exit 1
+          fi
+          if [ -z "${{ secrets.TESTER_BOT_TOKEN }}" ]; then
+            echo "::error::TESTER_BOT_TOKEN secret is not set. See docs/INTEGRATION_TESTING.md for setup instructions."
+            exit 1
+          fi
+          if [ -z "${{ secrets.TEST_GUILD_ID }}" ]; then
+            echo "::error::TEST_GUILD_ID secret is not set. See docs/INTEGRATION_TESTING.md for setup instructions."
+            exit 1
+          fi
+          if [ -z "${{ secrets.TEST_CHANNEL_ID }}" ]; then
+            echo "::error::TEST_CHANNEL_ID secret is not set. See docs/INTEGRATION_TESTING.md for setup instructions."
+            exit 1
+          fi
+          echo "All required secrets are configured."
+
+      - name: Start BallouBot in background
+        run: |
+          dotnet run --project src/BallouBot.Host --configuration Release --no-build &
+          BOT_PID=$!
+          echo "BOT_PID=$BOT_PID" >> $GITHUB_ENV
+          echo "BallouBot started with PID $BOT_PID"
+
+      - name: Wait for bot to connect
+        run: |
+          echo "Waiting ${{ inputs.timeout_seconds || '20' }} seconds for bot to connect..."
+          sleep ${{ inputs.timeout_seconds || '20' }}
+
+      - name: Run integration tests
+        run: dotnet run --project tests/BallouBot.IntegrationTests --configuration Release --no-build
+
+      - name: Stop BallouBot
+        if: always()
+        run: |
+          if [ -n "$BOT_PID" ]; then
+            kill $BOT_PID 2>/dev/null || true
+            echo "BallouBot stopped."
+          fi
+
+      - name: Cleanup test database
+        if: always()
+        run: rm -f balloubot-test.db*

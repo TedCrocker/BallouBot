@@ -11,6 +11,7 @@
     <Project Path="tests/BallouBot.Core.Tests/BallouBot.Core.Tests.csproj" />
     <Project Path="tests/BallouBot.Data.Tests/BallouBot.Data.Tests.csproj" />
     <Project Path="tests/BallouBot.Host.Tests/BallouBot.Host.Tests.csproj" />
+    <Project Path="tests/BallouBot.IntegrationTests/BallouBot.IntegrationTests.csproj" />
     <Project Path="tests/BallouBot.Modules.Welcome.Tests/BallouBot.Modules.Welcome.Tests.csproj" />
   </Folder>
 </Solution>

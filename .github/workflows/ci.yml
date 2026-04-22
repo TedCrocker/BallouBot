@@ -1,0 +1,38 @@
+name: CI - Build & Unit Tests
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run Core tests
+        run: dotnet run --project tests/BallouBot.Core.Tests --configuration Release --no-build
+
+      - name: Run Data tests
+        run: dotnet run --project tests/BallouBot.Data.Tests --configuration Release --no-build
+
+      - name: Run Host tests
+        run: dotnet run --project tests/BallouBot.Host.Tests --configuration Release --no-build
+
+      - name: Run Welcome Module tests
+        run: dotnet run --project tests/BallouBot.Modules.Welcome.Tests --configuration Release --no-build
