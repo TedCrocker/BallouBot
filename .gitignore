@@ -1,0 +1,44 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+
+# NuGet
+*.nupkg
+.nuget/
+packages/
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+*.usertasks
+
+# VS Code
+.vscode/
+
+# Visual Studio
+.vs/
+
+# Rider
+.idea/
+
+# Test results
+TestResults/
+
+# Logs
+logs/
+
+# SQLite database
+*.db
+*.db-shm
+*.db-wal
+
+# User secrets (keep the template, but not actual secrets)
+# appsettings.json contains the template - DO NOT put your real token there
+# Use user-secrets or environment variables instead
+
+# OS files
+Thumbs.db
+.DS_Store

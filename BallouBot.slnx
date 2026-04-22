@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/BallouBot.Core/BallouBot.Core.csproj" />
+    <Project Path="src/BallouBot.Data/BallouBot.Data.csproj" />
+    <Project Path="src/BallouBot.Host/BallouBot.Host.csproj" />
+  </Folder>
+  <Folder Name="/src/modules/">
+    <Project Path="src/modules/BallouBot.Modules.Welcome/BallouBot.Modules.Welcome.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/BallouBot.Core.Tests/BallouBot.Core.Tests.csproj" />
+    <Project Path="tests/BallouBot.Data.Tests/BallouBot.Data.Tests.csproj" />
+    <Project Path="tests/BallouBot.Host.Tests/BallouBot.Host.Tests.csproj" />
+    <Project Path="tests/BallouBot.Modules.Welcome.Tests/BallouBot.Modules.Welcome.Tests.csproj" />
+  </Folder>
+</Solution>
