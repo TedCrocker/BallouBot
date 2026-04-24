@@ -1,0 +1,22 @@
+services:
+  balloubot:
+    image: ghcr.io/${GITHUB_USER:-your-github-username}/balloubot:latest
+    container_name: balloubot
+    restart: unless-stopped
+    environment:
+      - Discord__Token=${DISCORD_TOKEN}
+      - DOTNET_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Data Source=/app/data/balloubot.db
+    volumes:
+      - balloubot-data:/app/data
+      - balloubot-logs:/app/logs
+    # Optional: uncomment to build locally instead of pulling from GHCR
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+
+volumes:
+  balloubot-data:
+    driver: local
+  balloubot-logs:
+    driver: local
