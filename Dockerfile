@@ -2,8 +2,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-# Copy solution and project files first for layer caching
-COPY BallouBot.slnx ./
+# Copy project files first for layer caching
 COPY global.json ./
 COPY src/BallouBot.Core/BallouBot.Core.csproj src/BallouBot.Core/
 COPY src/BallouBot.Data/BallouBot.Data.csproj src/BallouBot.Data/
@@ -11,8 +10,8 @@ COPY src/BallouBot.Host/BallouBot.Host.csproj src/BallouBot.Host/
 COPY src/modules/BallouBot.Modules.Welcome/BallouBot.Modules.Welcome.csproj src/modules/BallouBot.Modules.Welcome/
 COPY src/modules/BallouBot.Modules.RandomRichard/BallouBot.Modules.RandomRichard.csproj src/modules/BallouBot.Modules.RandomRichard/
 
-# Restore dependencies
-RUN dotnet restore BallouBot.slnx
+# Restore dependencies (Host project pulls in all src dependencies)
+RUN dotnet restore src/BallouBot.Host/BallouBot.Host.csproj
 
 # Copy everything else and build
 COPY src/ src/
