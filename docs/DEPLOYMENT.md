@@ -38,7 +38,7 @@ git push -u origin main
 ```
 
 The GitHub Actions workflows (`.github/workflows/`) will automatically:
-- **On every push to `main`**: Run tests, build Docker image, push to GHCR
+- **On every push to `master`**: Run tests, build Docker image, push to GHCR
 - **On every PR**: Run tests only
 
 ### Verify the First Build
