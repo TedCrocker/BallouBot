@@ -58,23 +58,23 @@ try
 
     var assemblies = new List<Assembly>();
 
-    // Add all referenced assemblies that might contain modules
-    var entryAssembly = Assembly.GetEntryAssembly();
-    if (entryAssembly != null)
+    // Scan the output directory for compiled-in module assemblies (BallouBot.Modules.*.dll)
+    var baseDir = AppContext.BaseDirectory;
+    foreach (var dllPath in Directory.GetFiles(baseDir, "BallouBot.Modules.*.dll"))
     {
-        var referencedAssemblies = entryAssembly.GetReferencedAssemblies()
-            .Select(name =>
-            {
-                try { return Assembly.Load(name); }
-                catch { return null; }
-            })
-            .Where(a => a != null)
-            .Cast<Assembly>();
-        assemblies.AddRange(referencedAssemblies);
+        try
+        {
+            var assembly = Assembly.LoadFrom(dllPath);
+            assemblies.Add(assembly);
+        }
+        catch
+        {
+            // Skip assemblies that fail to load
+        }
     }
 
     // Also scan a "modules" directory for drop-in modules
-    var modulesPath = Path.Combine(AppContext.BaseDirectory, "modules");
+    var modulesPath = Path.Combine(baseDir, "modules");
     assemblies.AddRange(moduleLoader.LoadAssembliesFromDirectory(modulesPath));
 
     // Discover module types and register their services

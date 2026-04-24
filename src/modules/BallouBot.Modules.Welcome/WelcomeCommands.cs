@@ -72,8 +72,14 @@ public class WelcomeCommands
                     .WithType(ApplicationCommandOptionType.SubCommand)
                     .AddOption("text", ApplicationCommandOptionType.String, "The embed title text.", isRequired: true));
 
-            await _context.Client.CreateGlobalApplicationCommandAsync(command.Build());
-            _logger.LogInformation("Registered /welcome slash command.");
+            // Register as guild commands (instant) on all connected guilds
+            var builtCommand = command.Build();
+            foreach (var guild in _context.Client.Guilds)
+            {
+                await guild.CreateApplicationCommandAsync(builtCommand);
+                _logger.LogDebug("Registered /welcome command on guild {GuildName} ({GuildId})", guild.Name, guild.Id);
+            }
+            _logger.LogInformation("Registered /welcome slash command on {Count} guild(s).", _context.Client.Guilds.Count);
         }
         catch (Exception ex)
         {

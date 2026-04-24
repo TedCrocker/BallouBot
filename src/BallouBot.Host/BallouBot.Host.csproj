@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -10,6 +10,10 @@
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.19.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.7">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.0" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
@@ -21,6 +25,7 @@
     <ProjectReference Include="..\BallouBot.Core\BallouBot.Core.csproj" />
     <ProjectReference Include="..\BallouBot.Data\BallouBot.Data.csproj" />
     <ProjectReference Include="..\modules\BallouBot.Modules.Welcome\BallouBot.Modules.Welcome.csproj" />
+    <ProjectReference Include="..\modules\BallouBot.Modules.RandomRichard\BallouBot.Modules.RandomRichard.csproj" />
   </ItemGroup>
 
 </Project>

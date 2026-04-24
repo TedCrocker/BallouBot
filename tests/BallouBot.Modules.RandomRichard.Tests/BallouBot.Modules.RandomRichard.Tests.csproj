@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
-    <RootNamespace>BallouBot.Modules.Welcome.Tests</RootNamespace>
+    <RootNamespace>BallouBot.Modules.RandomRichard.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\BallouBot.Core\BallouBot.Core.csproj" />
     <ProjectReference Include="..\..\src\BallouBot.Data\BallouBot.Data.csproj" />
-    <ProjectReference Include="..\..\src\modules\BallouBot.Modules.Welcome\BallouBot.Modules.Welcome.csproj" />
+    <ProjectReference Include="..\..\src\modules\BallouBot.Modules.RandomRichard\BallouBot.Modules.RandomRichard.csproj" />
   </ItemGroup>
 
 </Project>

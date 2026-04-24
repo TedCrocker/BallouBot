@@ -5,8 +5,10 @@ namespace BallouBot.IntegrationTests;
 
 /// <summary>
 /// Integration tests for the /welcome slash command.
-/// These tests use the tester bot to verify that BallouBot's slash commands
-/// are registered and respond correctly in a real Discord server.
+/// These tests connect as BallouBot itself to verify that its slash commands
+/// are registered correctly in the test guild.
+/// Note: GetApplicationCommandsAsync() is application-scoped in the Discord API,
+/// so we must use BallouBot's own token to see its registered commands.
 /// </summary>
 public class WelcomeSlashCommandTests
 {
@@ -18,11 +20,12 @@ public class WelcomeSlashCommandTests
 
     [Test]
     [Category("Integration")]
-    public async Task WelcomeCommand_IsRegisteredGlobally()
+    public async Task WelcomeCommand_IsRegisteredOnGuild()
     {
         SkipIfNotConfigured();
 
-        await using var fixture = new DiscordTestFixture();
+        // Use BallouBot's own token — GetApplicationCommandsAsync is application-scoped
+        await using var fixture = new DiscordTestFixture(TestConfiguration.BotToken);
         await fixture.ConnectAsync();
 
         var guild = fixture.TestGuild;
@@ -41,7 +44,7 @@ public class WelcomeSlashCommandTests
     {
         SkipIfNotConfigured();
 
-        await using var fixture = new DiscordTestFixture();
+        await using var fixture = new DiscordTestFixture(TestConfiguration.BotToken);
         await fixture.ConnectAsync();
 
         var guild = fixture.TestGuild;
@@ -72,7 +75,7 @@ public class WelcomeSlashCommandTests
     {
         SkipIfNotConfigured();
 
-        await using var fixture = new DiscordTestFixture();
+        await using var fixture = new DiscordTestFixture(TestConfiguration.BotToken);
         await fixture.ConnectAsync();
 
         var guild = fixture.TestGuild;

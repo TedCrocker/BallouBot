@@ -39,4 +39,9 @@ public class GuildSettings
     /// Navigation property: welcome configuration for this guild.
     /// </summary>
     public WelcomeConfig? WelcomeConfig { get; set; }
+
+    /// <summary>
+    /// Navigation property: Random Richard configuration for this guild.
+    /// </summary>
+    public RichardConfig? RichardConfig { get; set; }
 }

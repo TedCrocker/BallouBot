@@ -20,6 +20,16 @@ public class BotDbContext : DbContext
     public DbSet<WelcomeConfig> WelcomeConfigs => Set<WelcomeConfig>();
 
     /// <summary>
+    /// Gets or sets the Random Richard configuration table.
+    /// </summary>
+    public DbSet<RichardConfig> RichardConfigs => Set<RichardConfig>();
+
+    /// <summary>
+    /// Gets or sets the Random Richard user entries (whitelist/blacklist) table.
+    /// </summary>
+    public DbSet<RichardUserEntry> RichardUserEntries => Set<RichardUserEntry>();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BotDbContext"/> class.
     /// </summary>
     /// <param name="options">The database context options.</param>
@@ -81,6 +91,56 @@ public class BotDbContext : DbContext
 
             entity.Property(e => e.EmbedTitle)
                 .HasMaxLength(256);
+        });
+
+        modelBuilder.Entity<RichardConfig>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.GuildId).IsUnique();
+
+            entity.Property(e => e.GuildId)
+                .IsRequired();
+
+            entity.Property(e => e.IsEnabled)
+                .HasDefaultValue(false);
+
+            entity.Property(e => e.MinIntervalMinutes)
+                .HasDefaultValue(480);
+
+            entity.Property(e => e.MaxIntervalMinutes)
+                .HasDefaultValue(480);
+
+            entity.Property(e => e.UseWhitelistMode)
+                .HasDefaultValue(true);
+
+            entity.HasOne(e => e.GuildSettings)
+                .WithOne(g => g.RichardConfig)
+                .HasForeignKey<RichardConfig>(r => r.GuildId)
+                .HasPrincipalKey<GuildSettings>(g => g.GuildId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(e => e.UserEntries)
+                .WithOne(u => u.RichardConfig)
+                .HasForeignKey(u => u.GuildId)
+                .HasPrincipalKey(r => r.GuildId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<RichardUserEntry>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.GuildId, e.UserId, e.ListType }).IsUnique();
+
+            entity.Property(e => e.GuildId)
+                .IsRequired();
+
+            entity.Property(e => e.UserId)
+                .IsRequired();
+
+            entity.Property(e => e.ListType)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasMaxLength(20);
         });
     }
 }

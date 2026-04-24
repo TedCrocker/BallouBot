@@ -28,8 +28,15 @@ public class DiscordTestFixture : IAsyncDisposable
     /// </summary>
     public SocketTextChannel? TestChannel => TestGuild?.GetTextChannel(TestConfiguration.TestChannelId);
 
-    public DiscordTestFixture()
+    private readonly string _token;
+
+    /// <summary>
+    /// Creates a fixture that connects using the tester bot token by default.
+    /// </summary>
+    /// <param name="token">The bot token to use. Defaults to the tester bot token.</param>
+    public DiscordTestFixture(string? token = null)
     {
+        _token = token ?? TestConfiguration.TesterBotToken;
         _client = new DiscordSocketClient(new DiscordSocketConfig
         {
             GatewayIntents = GatewayIntents.Guilds
@@ -47,12 +54,12 @@ public class DiscordTestFixture : IAsyncDisposable
     }
 
     /// <summary>
-    /// Connects the tester bot to Discord and waits until ready.
+    /// Connects the bot to Discord and waits until ready.
     /// </summary>
     /// <param name="timeoutSeconds">Maximum seconds to wait for connection.</param>
     public async Task ConnectAsync(int timeoutSeconds = 30)
     {
-        await _client.LoginAsync(TokenType.Bot, TestConfiguration.TesterBotToken);
+        await _client.LoginAsync(TokenType.Bot, _token);
         await _client.StartAsync();
 
         var timeoutTask = Task.Delay(TimeSpan.FromSeconds(timeoutSeconds));

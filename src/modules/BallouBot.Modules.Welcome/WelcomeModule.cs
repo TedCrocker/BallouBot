@@ -27,8 +27,9 @@ public class WelcomeModule : IModule
     /// <inheritdoc />
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddScoped<WelcomeHandler>();
-        services.AddScoped<WelcomeCommands>();
+        // WelcomeHandler and WelcomeCommands are created manually in InitializeAsync
+        // with the IModuleContext, so no DI registrations are needed here.
+        // Additional module-specific services can be registered here in the future.
     }
 
     /// <inheritdoc />

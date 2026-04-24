@@ -112,7 +112,43 @@ The workflow will:
 
 ### Locally (for development)
 
-Set the environment variables and run:
+#### Option A: Using `dotnet user-secrets` (recommended)
+
+Store your test secrets securely without environment variables:
+
+```bash
+# Set each secret (run from the repo root)
+dotnet user-secrets set "TESTER_BOT_TOKEN" "your-tester-bot-token" --project tests/BallouBot.IntegrationTests
+dotnet user-secrets set "TEST_GUILD_ID" "123456789012345678" --project tests/BallouBot.IntegrationTests
+dotnet user-secrets set "TEST_CHANNEL_ID" "987654321098765432" --project tests/BallouBot.IntegrationTests
+```
+
+Once secrets are set, they persist across sessions. You can then run tests anytime:
+
+```bash
+# Make sure BallouBot is running first (in another terminal):
+# dotnet run --project src/BallouBot.Host
+
+# Run integration tests:
+dotnet test tests/BallouBot.IntegrationTests
+```
+
+To view or remove secrets:
+
+```bash
+# List all secrets
+dotnet user-secrets list --project tests/BallouBot.IntegrationTests
+
+# Remove a specific secret
+dotnet user-secrets remove "TESTER_BOT_TOKEN" --project tests/BallouBot.IntegrationTests
+
+# Remove all secrets
+dotnet user-secrets clear --project tests/BallouBot.IntegrationTests
+```
+
+#### Option B: Using environment variables
+
+Environment variables also work and take precedence over user secrets (useful for CI):
 
 ```bash
 # Windows (PowerShell)
@@ -125,7 +161,7 @@ $env:TEST_CHANNEL_ID = "your-test-channel-id"
 # dotnet run --project src/BallouBot.Host
 
 # Then run integration tests:
-dotnet run --project tests/BallouBot.IntegrationTests
+dotnet test tests/BallouBot.IntegrationTests
 ```
 
 ```bash
@@ -139,10 +175,10 @@ export TEST_CHANNEL_ID="your-test-channel-id"
 # dotnet run --project src/BallouBot.Host
 
 # Run integration tests:
-dotnet run --project tests/BallouBot.IntegrationTests
+dotnet test tests/BallouBot.IntegrationTests
 ```
 
-> **Note:** The hybrid tests (database + mocked Discord) will run even without the environment variables set. The Discord integration tests will be skipped if the environment variables are not configured.
+> **Note:** The hybrid tests (database + mocked Discord) will run even without secrets or environment variables set. The Discord integration tests will be skipped if the required values are not configured.
 
 ---
 
