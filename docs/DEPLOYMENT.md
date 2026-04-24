@@ -71,20 +71,29 @@ Unraid needs to authenticate with GHCR to pull your image. GitHub Container Regi
 
 ### Option A: Using Unraid's Docker UI (Recommended)
 
-1. Open the Unraid web UI
-2. Go to **Docker** tab
-3. At the bottom, toggle **Advanced View** on
-4. Click **"Add Container"** and configure:
+**First, authenticate with GHCR via the Unraid terminal:**
+
+1. In the Unraid web UI, click the **Terminal** button (top-right corner)
+2. Run the following command to log in to GitHub Container Registry:
+
+```bash
+echo "YOUR_GITHUB_PAT" | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+```
+
+Replace `YOUR_GITHUB_PAT` with the personal access token from Step 2, and `YOUR_GITHUB_USERNAME` with your GitHub username. You should see `Login Succeeded`.
+
+**Then, create the container:**
+
+1. Go to the **Docker** tab
+2. At the bottom, toggle **Advanced View** on
+3. Click **"Add Container"** and configure:
 
 | Field | Value |
 |---|---|
 | **Name** | `balloubot` |
 | **Repository** | `ghcr.io/YOUR_GITHUB_USERNAME/balloubot:latest` |
-| **Registry URL** | `https://ghcr.io` |
-| **Registry Username** | Your GitHub username |
-| **Registry Password** | The personal access token from Step 2 |
 
-5. Add the following **environment variables** (click "Add another Path, Port, Variable, Label, or Device" → select "Variable"):
+4. Add the following **environment variables** (click "Add another Path, Port, Variable, Label, or Device" → select "Variable"):
 
 | Name | Key | Value |
 |---|---|---|
