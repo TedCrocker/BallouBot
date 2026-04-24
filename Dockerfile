@@ -21,16 +21,11 @@ RUN dotnet publish src/BallouBot.Host/BallouBot.Host.csproj -c Release -o /app/p
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
-# Create a non-root user for security
-RUN groupadd -r balloubot && useradd -r -g balloubot -d /app -s /sbin/nologin balloubot
-
 # Copy published output
 COPY --from=build /app/publish .
 
 # Create directories for data and logs
-RUN mkdir -p /app/data /app/logs && chown -R balloubot:balloubot /app
-
-USER balloubot
+RUN mkdir -p /app/data /app/logs
 
 # Default environment variables
 ENV DOTNET_ENVIRONMENT=Production
