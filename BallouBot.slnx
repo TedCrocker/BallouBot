@@ -5,6 +5,7 @@
     <Project Path="src/BallouBot.Host/BallouBot.Host.csproj" />
   </Folder>
   <Folder Name="/src/modules/">
+    <Project Path="src/modules/BallouBot.Modules.FactCheck/BallouBot.Modules.FactCheck.csproj" />
     <Project Path="src/modules/BallouBot.Modules.Gif/BallouBot.Modules.Gif.csproj" />
     <Project Path="src/modules/BallouBot.Modules.RandomRichard/BallouBot.Modules.RandomRichard.csproj" />
     <Project Path="src/modules/BallouBot.Modules.Welcome/BallouBot.Modules.Welcome.csproj" />
@@ -14,6 +15,7 @@
     <Project Path="tests/BallouBot.Data.Tests/BallouBot.Data.Tests.csproj" />
     <Project Path="tests/BallouBot.Host.Tests/BallouBot.Host.Tests.csproj" />
     <Project Path="tests/BallouBot.IntegrationTests/BallouBot.IntegrationTests.csproj" />
+    <Project Path="tests/BallouBot.Modules.FactCheck.Tests/BallouBot.Modules.FactCheck.Tests.csproj" />
     <Project Path="tests/BallouBot.Modules.Gif.Tests/BallouBot.Modules.Gif.Tests.csproj" />
     <Project Path="tests/BallouBot.Modules.RandomRichard.Tests/BallouBot.Modules.RandomRichard.Tests.csproj" />
     <Project Path="tests/BallouBot.Modules.Welcome.Tests/BallouBot.Modules.Welcome.Tests.csproj" />

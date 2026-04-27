@@ -49,4 +49,9 @@ public class GuildSettings
     /// Navigation property: GIF module configuration for this guild.
     /// </summary>
     public GifConfig? GifConfig { get; set; }
+
+    /// <summary>
+    /// Navigation property: Fact Check module configuration for this guild.
+    /// </summary>
+    public FactCheckConfig? FactCheckConfig { get; set; }
 }

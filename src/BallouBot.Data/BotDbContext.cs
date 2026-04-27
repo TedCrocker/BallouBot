@@ -35,6 +35,16 @@ public class BotDbContext : DbContext
     public DbSet<GifConfig> GifConfigs => Set<GifConfig>();
 
     /// <summary>
+    /// Gets or sets the Fact Check module configuration table.
+    /// </summary>
+    public DbSet<FactCheckConfig> FactCheckConfigs => Set<FactCheckConfig>();
+
+    /// <summary>
+    /// Gets or sets the Fact Check watched users table.
+    /// </summary>
+    public DbSet<FactCheckUser> FactCheckUsers => Set<FactCheckUser>();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BotDbContext"/> class.
     /// </summary>
     /// <param name="options">The database context options.</param>
@@ -177,6 +187,68 @@ public class BotDbContext : DbContext
                 .HasForeignKey<GifConfig>(gc => gc.GuildId)
                 .HasPrincipalKey<GuildSettings>(g => g.GuildId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<FactCheckConfig>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.GuildId).IsUnique();
+
+            entity.Property(e => e.GuildId)
+                .IsRequired();
+
+            entity.Property(e => e.IsEnabled)
+                .HasDefaultValue(false);
+
+            entity.Property(e => e.AiProvider)
+                .HasMaxLength(50)
+                .HasDefaultValue("OpenAI");
+
+            entity.Property(e => e.ApiKey)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.Model)
+                .HasMaxLength(100)
+                .HasDefaultValue("gpt-4o-mini");
+
+            entity.Property(e => e.AzureEndpoint)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.CooldownSeconds)
+                .HasDefaultValue(60);
+
+            entity.Property(e => e.MaxChecksPerHour)
+                .HasDefaultValue(30);
+
+            entity.Property(e => e.MinMessageLength)
+                .HasDefaultValue(20);
+
+            entity.Property(e => e.ChannelId)
+                .IsRequired(false);
+
+            entity.HasOne(e => e.GuildSettings)
+                .WithOne(g => g.FactCheckConfig)
+                .HasForeignKey<FactCheckConfig>(fc => fc.GuildId)
+                .HasPrincipalKey<GuildSettings>(g => g.GuildId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasMany(e => e.WatchedUsers)
+                .WithOne(u => u.FactCheckConfig)
+                .HasForeignKey(u => u.GuildId)
+                .HasPrincipalKey(fc => fc.GuildId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        modelBuilder.Entity<FactCheckUser>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.GuildId, e.UserId }).IsUnique();
+
+            entity.Property(e => e.GuildId)
+                .IsRequired();
+
+            entity.Property(e => e.UserId)
+                .IsRequired();
         });
     }
 }

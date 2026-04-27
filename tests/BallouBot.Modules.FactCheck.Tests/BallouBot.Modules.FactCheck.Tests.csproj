@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TUnit" Version="1.22.6" />
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\BallouBot.Core\BallouBot.Core.csproj" />
+    <ProjectReference Include="..\..\src\BallouBot.Data\BallouBot.Data.csproj" />
+    <ProjectReference Include="..\..\src\modules\BallouBot.Modules.FactCheck\BallouBot.Modules.FactCheck.csproj" />
+  </ItemGroup>
+
+</Project>
