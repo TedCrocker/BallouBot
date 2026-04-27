@@ -73,6 +73,7 @@ public class RichardTimerService
 
     /// <summary>
     /// Forces an immediate send of a Random Richard to a random eligible user in the specified guild.
+    /// If a user has DMs disabled, skips them and tries another eligible user.
     /// </summary>
     /// <param name="guildId">The guild ID to send in.</param>
     /// <returns>A message describing the result.</returns>
@@ -98,8 +99,8 @@ public class RichardTimerService
                 return "❌ Could not find the server.";
             }
 
-            var user = await PickRandomEligibleUserAsync(guild, config);
-            if (user is null)
+            var eligibleUsers = await GetShuffledEligibleUsersAsync(guild, config);
+            if (eligibleUsers.Count == 0)
             {
                 return "❌ No eligible users found. Make sure users are whitelisted (or switch to blacklist mode).";
             }
@@ -110,10 +111,12 @@ public class RichardTimerService
                 return "❌ Failed to fetch a Richard from Wikipedia. Try again later.";
             }
 
-            var sent = await SendRichardDmAsync(user, richard);
-            return sent
-                ? $"✅ Sent a Random Richard ({richard.Name}) to {user.DisplayName}!"
-                : $"⚠️ Fetched {richard.Name} but couldn't DM {user.DisplayName} (they may have DMs disabled).";
+            var (sent, recipient, usedFallback) = await TrySendToEligibleUsersAsync(eligibleUsers, richard, config);
+            if (sent && usedFallback)
+                return $"✅ Sent a Random Richard ({richard.Name}) to {recipient!.DisplayName} via private thread (DMs blocked).";
+            if (sent)
+                return $"✅ Sent a Random Richard ({richard.Name}) to {recipient!.DisplayName}!";
+            return $"⚠️ Fetched {richard.Name} but couldn't reach any eligible user (all {eligibleUsers.Count} user(s) may have DMs disabled and no fallback channel is set).";
         }
         catch (Exception ex)
         {
@@ -207,8 +210,8 @@ public class RichardTimerService
             return;
         }
 
-        var user = await PickRandomEligibleUserAsync(guild, config);
-        if (user is null)
+        var eligibleUsers = await GetShuffledEligibleUsersAsync(guild, config);
+        if (eligibleUsers.Count == 0)
         {
             _logger.LogWarning("No eligible users in guild {GuildId}, skipping.", guildId);
             _lastSendTimes[guildId] = DateTime.UtcNow;
@@ -223,16 +226,21 @@ public class RichardTimerService
             return;
         }
 
-        var sent = await SendRichardDmAsync(user, richard);
-        if (sent)
+        var (sent, recipient, usedFallback) = await TrySendToEligibleUsersAsync(eligibleUsers, richard, config);
+        if (sent && usedFallback)
+        {
+            _logger.LogInformation("Sent Random Richard ({Name}) to {User} via private thread in guild {Guild}",
+                richard.Name, recipient!.DisplayName, guild.Name);
+        }
+        else if (sent)
         {
             _logger.LogInformation("Sent Random Richard ({Name}) to {User} in guild {Guild}",
-                richard.Name, user.DisplayName, guild.Name);
+                richard.Name, recipient!.DisplayName, guild.Name);
         }
         else
         {
-            _logger.LogWarning("Could not DM {User} in guild {Guild} (DMs may be disabled)",
-                user.DisplayName, guild.Name);
+            _logger.LogWarning("Could not reach any of {Count} eligible user(s) in guild {Guild}",
+                eligibleUsers.Count, guild.Name);
         }
 
         // Reset timer with new random interval
@@ -241,6 +249,179 @@ public class RichardTimerService
 
         _logger.LogDebug("Next Random Richard for guild {GuildId} in {Minutes} minutes",
             guildId, _nextIntervalMinutes[guildId]);
+    }
+
+    /// <summary>
+    /// Gets all eligible users for the guild in a randomized order.
+    /// Used to iterate through users when a DM fails (e.g., DMs disabled) so the next user can be tried.
+    /// </summary>
+    /// <param name="guild">The guild to get users from.</param>
+    /// <param name="config">The Richard configuration with whitelist/blacklist settings.</param>
+    /// <returns>A shuffled list of eligible users.</returns>
+    internal async Task<List<SocketGuildUser>> GetShuffledEligibleUsersAsync(SocketGuild guild, RichardConfig config)
+    {
+        // Ensure members are downloaded
+        await guild.DownloadUsersAsync();
+
+        var allUsers = guild.Users
+            .Where(u => !u.IsBot)
+            .ToList();
+
+        if (allUsers.Count == 0) return [];
+
+        List<SocketGuildUser> eligibleUsers;
+
+        if (config.UseWhitelistMode)
+        {
+            var whitelistedIds = config.UserEntries
+                .Where(e => e.ListType == RichardListType.Whitelist)
+                .Select(e => e.UserId)
+                .ToHashSet();
+
+            eligibleUsers = allUsers.Where(u => whitelistedIds.Contains(u.Id)).ToList();
+        }
+        else
+        {
+            var blacklistedIds = config.UserEntries
+                .Where(e => e.ListType == RichardListType.Blacklist)
+                .Select(e => e.UserId)
+                .ToHashSet();
+
+            eligibleUsers = allUsers.Where(u => !blacklistedIds.Contains(u.Id)).ToList();
+        }
+
+        // Shuffle using Fisher-Yates
+        for (var i = eligibleUsers.Count - 1; i > 0; i--)
+        {
+            var j = _random.Next(i + 1);
+            (eligibleUsers[i], eligibleUsers[j]) = (eligibleUsers[j], eligibleUsers[i]);
+        }
+
+        return eligibleUsers;
+    }
+
+    /// <summary>
+    /// Attempts to send a Richard DM to each user in the list, in order, until one succeeds.
+    /// If all DMs fail and a fallback channel is configured, creates a private thread for the first user.
+    /// </summary>
+    /// <param name="users">The shuffled list of eligible users to try.</param>
+    /// <param name="richard">The Richard info to send.</param>
+    /// <param name="config">The Richard config with fallback channel settings.</param>
+    /// <returns>A tuple indicating success, the recipient, and whether the fallback was used.</returns>
+    internal async Task<(bool Sent, SocketGuildUser? Recipient, bool UsedFallback)> TrySendToEligibleUsersAsync(
+        List<SocketGuildUser> users, RichardInfo richard, RichardConfig config)
+    {
+        var failedUsers = new List<SocketGuildUser>();
+
+        foreach (var user in users)
+        {
+            var sent = await SendRichardDmAsync(user, richard);
+            if (sent)
+            {
+                return (true, user, false);
+            }
+
+            failedUsers.Add(user);
+            _logger.LogInformation("User {Username} ({UserId}) — DM failed, trying next eligible user.",
+                user.DisplayName, user.Id);
+        }
+
+        // All DMs failed — try fallback channel with private thread
+        if (config.FallbackChannelId.HasValue && failedUsers.Count > 0)
+        {
+            var targetUser = failedUsers[0]; // Send to the first user we tried
+            var sent = await SendRichardViaPrivateThreadAsync(targetUser, richard, config.FallbackChannelId.Value);
+            if (sent)
+            {
+                return (true, targetUser, true);
+            }
+        }
+
+        _logger.LogWarning("Exhausted all {Count} eligible user(s) — none could be reached.", users.Count);
+        return (false, null, false);
+    }
+
+    /// <summary>
+    /// Attempts to send a Richard DM to each user in the list, in order, until one succeeds.
+    /// Users who have DMs disabled are logged and skipped. (Legacy overload without fallback.)
+    /// </summary>
+    internal async Task<(bool Sent, SocketGuildUser? Recipient)> TrySendToEligibleUsersAsync(
+        List<SocketGuildUser> users, RichardInfo richard)
+    {
+        foreach (var user in users)
+        {
+            var sent = await SendRichardDmAsync(user, richard);
+            if (sent)
+            {
+                return (true, user);
+            }
+
+            _logger.LogInformation("Skipping user {Username} ({UserId}) — DM failed, trying next eligible user.",
+                user.DisplayName, user.Id);
+        }
+
+        _logger.LogWarning("Exhausted all {Count} eligible user(s) — none could be DM'd.", users.Count);
+        return (false, null);
+    }
+
+    /// <summary>
+    /// Creates a private thread in the fallback channel and sends the Richard embed to it,
+    /// adding only the target user. This is used when the user has DMs disabled.
+    /// </summary>
+    internal async Task<bool> SendRichardViaPrivateThreadAsync(SocketGuildUser user, RichardInfo richard, ulong fallbackChannelId)
+    {
+        try
+        {
+            var guild = user.Guild;
+            var channel = guild.GetTextChannel(fallbackChannelId);
+            if (channel is null)
+            {
+                _logger.LogWarning("Fallback channel {ChannelId} not found in guild {GuildId}.", fallbackChannelId, guild.Id);
+                return false;
+            }
+
+            // Create a private thread
+            var threadName = $"🎩 Richard for {user.DisplayName}";
+            // Truncate to Discord's 100-char thread name limit
+            if (threadName.Length > 100)
+                threadName = threadName[..100];
+
+            var thread = await channel.CreateThreadAsync(
+                name: threadName,
+                type: ThreadType.PrivateThread,
+                autoArchiveDuration: ThreadArchiveDuration.OneHour);
+
+            // Add the target user to the thread
+            await thread.AddUserAsync(user);
+
+            // Build and send the embed
+            var embed = new EmbedBuilder()
+                .WithTitle($"🎩 Random Richard: {richard.Name}")
+                .WithDescription(richard.Summary)
+                .WithColor(new Color(0x9B59B6))
+                .WithUrl(richard.WikipediaUrl)
+                .WithFooter("Brought to you by Random Richard™ | Powered by Wikipedia\n💡 This was sent here because your DMs are disabled.")
+                .WithCurrentTimestamp();
+
+            if (!string.IsNullOrEmpty(richard.ImageUrl))
+            {
+                embed.WithImageUrl(richard.ImageUrl);
+            }
+
+            await thread.SendMessageAsync(
+                $"Hey {user.Mention}! You've been chosen for a Random Richard, but your DMs are closed so here it is:",
+                embed: embed.Build());
+
+            _logger.LogInformation("Sent Random Richard to {User} via private thread in fallback channel {Channel}.",
+                user.DisplayName, channel.Name);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send Richard via private thread to user {UserId}", user.Id);
+            return false;
+        }
     }
 
     /// <summary>

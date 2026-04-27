@@ -39,6 +39,12 @@ public class RichardConfig
     public bool UseWhitelistMode { get; set; } = true;
 
     /// <summary>
+    /// Gets or sets the fallback channel ID for users who have DMs disabled.
+    /// When set, the bot creates a private thread in this channel to deliver the Richard.
+    /// </summary>
+    public ulong? FallbackChannelId { get; set; }
+
+    /// <summary>
     /// Gets or sets when this record was created.
     /// </summary>
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -30,6 +30,11 @@ public class BotDbContext : DbContext
     public DbSet<RichardUserEntry> RichardUserEntries => Set<RichardUserEntry>();
 
     /// <summary>
+    /// Gets or sets the GIF module configuration table.
+    /// </summary>
+    public DbSet<GifConfig> GifConfigs => Set<GifConfig>();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BotDbContext"/> class.
     /// </summary>
     /// <param name="options">The database context options.</param>
@@ -113,6 +118,9 @@ public class BotDbContext : DbContext
             entity.Property(e => e.UseWhitelistMode)
                 .HasDefaultValue(true);
 
+            entity.Property(e => e.FallbackChannelId)
+                .IsRequired(false);
+
             entity.HasOne(e => e.GuildSettings)
                 .WithOne(g => g.RichardConfig)
                 .HasForeignKey<RichardConfig>(r => r.GuildId)
@@ -141,6 +149,34 @@ public class BotDbContext : DbContext
                 .IsRequired()
                 .HasConversion<string>()
                 .HasMaxLength(20);
+        });
+
+        modelBuilder.Entity<GifConfig>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => e.GuildId).IsUnique();
+
+            entity.Property(e => e.GuildId)
+                .IsRequired();
+
+            entity.Property(e => e.IsEnabled)
+                .HasDefaultValue(true);
+
+            entity.Property(e => e.Provider)
+                .HasMaxLength(50)
+                .HasDefaultValue("Tenor");
+
+            entity.Property(e => e.ApiKey)
+                .HasMaxLength(500);
+
+            entity.Property(e => e.PreviewCount)
+                .HasDefaultValue(5);
+
+            entity.HasOne(e => e.GuildSettings)
+                .WithOne(g => g.GifConfig)
+                .HasForeignKey<GifConfig>(gc => gc.GuildId)
+                .HasPrincipalKey<GuildSettings>(g => g.GuildId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

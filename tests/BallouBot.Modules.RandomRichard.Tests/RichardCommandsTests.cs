@@ -122,6 +122,60 @@ public class RichardCommandsTests
         var fromDb = await db.RichardConfigs.FirstOrDefaultAsync(c => c.GuildId == guildId);
         await Assert.That(fromDb).IsNotNull();
     }
+
+    [Test]
+    public async Task GetOrCreateConfigAsync_NewConfigHasNullFallbackChannel()
+    {
+        var options = CreateInMemoryOptions(nameof(GetOrCreateConfigAsync_NewConfigHasNullFallbackChannel));
+        using var db = new BotDbContext(options);
+        await db.Database.EnsureCreatedAsync();
+
+        ulong guildId = 202020202;
+
+        var config = await RichardCommands.GetOrCreateConfigAsync(db, guildId);
+
+        await Assert.That(config.FallbackChannelId).IsNull();
+    }
+
+    [Test]
+    public async Task RichardConfig_CanSetFallbackChannel()
+    {
+        var options = CreateInMemoryOptions(nameof(RichardConfig_CanSetFallbackChannel));
+        using var db = new BotDbContext(options);
+        await db.Database.EnsureCreatedAsync();
+
+        ulong guildId = 303030303;
+        ulong channelId = 999888777666;
+
+        var config = await RichardCommands.GetOrCreateConfigAsync(db, guildId);
+        config.FallbackChannelId = channelId;
+        config.UpdatedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+
+        var fromDb = await db.RichardConfigs.FirstOrDefaultAsync(c => c.GuildId == guildId);
+        await Assert.That(fromDb!.FallbackChannelId).IsEqualTo(channelId);
+    }
+
+    [Test]
+    public async Task RichardConfig_CanClearFallbackChannel()
+    {
+        var options = CreateInMemoryOptions(nameof(RichardConfig_CanClearFallbackChannel));
+        using var db = new BotDbContext(options);
+        await db.Database.EnsureCreatedAsync();
+
+        ulong guildId = 404040404;
+
+        var config = await RichardCommands.GetOrCreateConfigAsync(db, guildId);
+        config.FallbackChannelId = 123456789;
+        await db.SaveChangesAsync();
+
+        config.FallbackChannelId = null;
+        config.UpdatedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+
+        var fromDb = await db.RichardConfigs.FirstOrDefaultAsync(c => c.GuildId == guildId);
+        await Assert.That(fromDb!.FallbackChannelId).IsNull();
+    }
 }
 
 /// <summary>

@@ -94,7 +94,12 @@ public class RichardCommands
                 .AddOption(new SlashCommandOptionBuilder()
                     .WithName("status")
                     .WithDescription("Show current Random Richard configuration.")
-                    .WithType(ApplicationCommandOptionType.SubCommand));
+                    .WithType(ApplicationCommandOptionType.SubCommand))
+                .AddOption(new SlashCommandOptionBuilder()
+                    .WithName("fallback-channel")
+                    .WithDescription("Set a fallback channel for users with DMs disabled (uses private threads).")
+                    .WithType(ApplicationCommandOptionType.SubCommand)
+                    .AddOption("channel", ApplicationCommandOptionType.Channel, "The text channel (or leave empty to clear).", isRequired: false));
 
             var builtCommand = command.Build();
             foreach (var guild in _context.Client.Guilds)
@@ -152,6 +157,9 @@ public class RichardCommands
                     break;
                 case "status":
                     await HandleStatusAsync(command);
+                    break;
+                case "fallback-channel":
+                    await HandleFallbackChannelAsync(command, subCommand);
                     break;
                 default:
                     await command.RespondAsync("Unknown subcommand.", ephemeral: true);
@@ -471,6 +479,10 @@ public class RichardCommands
             ? $"{config.MinIntervalMinutes} minutes"
             : $"{config.MinIntervalMinutes}–{config.MaxIntervalMinutes} minutes";
 
+        var fallbackDesc = config.FallbackChannelId.HasValue
+            ? $"<#{config.FallbackChannelId.Value}>"
+            : "*Not set*";
+
         var embed = new EmbedBuilder()
             .WithTitle("🎩 Random Richard — Status")
             .WithColor(new Color(0x9B59B6))
@@ -479,9 +491,48 @@ public class RichardCommands
             .AddField("Interval", intervalDesc, true)
             .AddField("Whitelisted", whitelistCount.ToString(), true)
             .AddField("Blacklisted", blacklistCount.ToString(), true)
+            .AddField("Fallback Channel", fallbackDesc, true)
             .WithCurrentTimestamp();
 
         await command.RespondAsync(embed: embed.Build(), ephemeral: true);
+    }
+
+    private async Task HandleFallbackChannelAsync(SocketSlashCommand command, SocketSlashCommandDataOption subCommand)
+    {
+        using var scope = _context.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<BotDbContext>();
+        var guildId = command.GuildId!.Value;
+
+        var config = await GetOrCreateConfigAsync(db, guildId);
+
+        var channelOption = subCommand.Options.FirstOrDefault(o => o.Name == "channel");
+
+        if (channelOption is null)
+        {
+            // Clear the fallback channel
+            config.FallbackChannelId = null;
+            config.UpdatedAt = DateTime.UtcNow;
+            await db.SaveChangesAsync();
+
+            await command.RespondAsync("✅ Fallback channel cleared. Users with DMs disabled will be skipped.", ephemeral: true);
+            return;
+        }
+
+        var channel = channelOption.Value as IChannel;
+        if (channel is not ITextChannel textChannel)
+        {
+            await command.RespondAsync("❌ Please select a text channel.", ephemeral: true);
+            return;
+        }
+
+        config.FallbackChannelId = textChannel.Id;
+        config.UpdatedAt = DateTime.UtcNow;
+        await db.SaveChangesAsync();
+
+        await command.RespondAsync(
+            $"✅ Fallback channel set to {textChannel.Mention}.\n" +
+            "When a user has DMs disabled, a **private thread** will be created in that channel to deliver the Richard.",
+            ephemeral: true);
     }
 
     /// <summary>

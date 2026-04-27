@@ -44,4 +44,9 @@ public class GuildSettings
     /// Navigation property: Random Richard configuration for this guild.
     /// </summary>
     public RichardConfig? RichardConfig { get; set; }
+
+    /// <summary>
+    /// Navigation property: GIF module configuration for this guild.
+    /// </summary>
+    public GifConfig? GifConfig { get; set; }
 }
