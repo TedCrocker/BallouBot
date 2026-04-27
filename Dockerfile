@@ -9,6 +9,7 @@ COPY src/BallouBot.Data/BallouBot.Data.csproj src/BallouBot.Data/
 COPY src/BallouBot.Host/BallouBot.Host.csproj src/BallouBot.Host/
 COPY src/modules/BallouBot.Modules.Welcome/BallouBot.Modules.Welcome.csproj src/modules/BallouBot.Modules.Welcome/
 COPY src/modules/BallouBot.Modules.RandomRichard/BallouBot.Modules.RandomRichard.csproj src/modules/BallouBot.Modules.RandomRichard/
+COPY src/modules/BallouBot.Modules.Gif/BallouBot.Modules.Gif.csproj src/modules/BallouBot.Modules.Gif/
 
 # Restore dependencies (Host project pulls in all src dependencies)
 RUN dotnet restore src/BallouBot.Host/BallouBot.Host.csproj
