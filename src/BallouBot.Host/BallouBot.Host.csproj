@@ -28,6 +28,7 @@
     <ProjectReference Include="..\modules\BallouBot.Modules.RandomRichard\BallouBot.Modules.RandomRichard.csproj" />
     <ProjectReference Include="..\modules\BallouBot.Modules.Gif\BallouBot.Modules.Gif.csproj" />
     <ProjectReference Include="..\modules\BallouBot.Modules.FactCheck\BallouBot.Modules.FactCheck.csproj" />
+    <ProjectReference Include="..\modules\BallouBot.Modules.Help\BallouBot.Modules.Help.csproj" />
   </ItemGroup>
 
 </Project>
