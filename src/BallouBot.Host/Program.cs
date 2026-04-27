@@ -67,9 +67,9 @@ try
             var assembly = Assembly.LoadFrom(dllPath);
             assemblies.Add(assembly);
         }
-        catch
+        catch (Exception ex)
         {
-            // Skip assemblies that fail to load
+            Log.Warning(ex, "Failed to load module assembly: {Path}", dllPath);
         }
     }
 
