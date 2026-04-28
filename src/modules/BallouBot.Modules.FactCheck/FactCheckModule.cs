@@ -128,7 +128,6 @@ public class FactCheckModule : IModule
                     .WithTitle("🔍 Fact Check")
                     .WithDescription(result.Correction)
                     .WithColor(new Color(0xE74C3C)) // Red for corrections
-                    .WithFooter($"Powered by {result.ProviderName} • /factcheck to configure")
                     .WithCurrentTimestamp();
 
                 await userMessage.ReplyAsync(embed: embed.Build());
