@@ -66,4 +66,5 @@ BallouBot is a modular Discord bot built with **.NET 10**, **Discord.Net 3.19.1*
 - When adding a new module, add it to the "Current Modules" table above
 - When adding new conventions or patterns, document them in the appropriate section
 - When adding new documentation files, add them to the "Key Documentation" section
+- When adding a new module, also add its `.csproj` COPY line to the `Dockerfile`
 - This file is your persistent memory — keep it accurate and up to date
