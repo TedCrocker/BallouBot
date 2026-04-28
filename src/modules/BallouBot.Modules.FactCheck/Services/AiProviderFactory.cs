@@ -31,6 +31,7 @@ public class AiProviderFactory
             AiProviderType.OpenAI => new OpenAiProvider(_httpClient, _loggerFactory.CreateLogger<OpenAiProvider>()),
             AiProviderType.Anthropic => new AnthropicProvider(_httpClient, _loggerFactory.CreateLogger<AnthropicProvider>()),
             AiProviderType.AzureOpenAI => new AzureOpenAiProvider(_httpClient, _loggerFactory.CreateLogger<AzureOpenAiProvider>()),
+            AiProviderType.Google => new GoogleGeminiProvider(_httpClient, _loggerFactory.CreateLogger<GoogleGeminiProvider>()),
             _ => throw new ArgumentException($"Unknown AI provider type: {type}")
         };
 
@@ -48,7 +49,8 @@ public class AiProviderFactory
             "openai" => AiProviderType.OpenAI,
             "anthropic" or "claude" => AiProviderType.Anthropic,
             "azureopenai" or "azure" => AiProviderType.AzureOpenAI,
-            _ => throw new ArgumentException($"Unknown provider: {name}. Supported: OpenAI, Anthropic, AzureOpenAI")
+            "google" or "gemini" => AiProviderType.Google,
+            _ => throw new ArgumentException($"Unknown provider: {name}. Supported: OpenAI, Anthropic, AzureOpenAI, Google")
         };
     }
 
@@ -61,7 +63,8 @@ public class AiProviderFactory
         [
             (AiProviderType.OpenAI, "OpenAI", "gpt-4o-mini", false),
             (AiProviderType.Anthropic, "Anthropic", "claude-sonnet-4-20250514", false),
-            (AiProviderType.AzureOpenAI, "Azure OpenAI", "gpt-4o-mini", true)
+            (AiProviderType.AzureOpenAI, "Azure OpenAI", "gpt-4o-mini", true),
+            (AiProviderType.Google, "Google Gemini", "gemini-2.0-flash", false)
         ];
     }
 }

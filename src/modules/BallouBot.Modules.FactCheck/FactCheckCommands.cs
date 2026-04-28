@@ -50,7 +50,8 @@ public class FactCheckCommands
                         .WithRequired(true)
                         .AddChoice("OpenAI", "OpenAI")
                         .AddChoice("Anthropic", "Anthropic")
-                        .AddChoice("Azure OpenAI", "AzureOpenAI")))
+                        .AddChoice("Azure OpenAI", "AzureOpenAI")
+                        .AddChoice("Google Gemini", "Google")))
                 .AddOption(new SlashCommandOptionBuilder()
                     .WithName("apikey")
                     .WithDescription("Set the API key for the AI provider.")
@@ -60,7 +61,7 @@ public class FactCheckCommands
                     .WithName("model")
                     .WithDescription("Set the AI model to use.")
                     .WithType(ApplicationCommandOptionType.SubCommand)
-                    .AddOption("name", ApplicationCommandOptionType.String, "The model name (e.g., gpt-4o-mini, claude-sonnet-4-20250514).", isRequired: true))
+                    .AddOption("name", ApplicationCommandOptionType.String, "The model name (e.g., gpt-4o-mini, claude-sonnet-4-20250514, gemini-2.0-flash).", isRequired: true))
                 .AddOption(new SlashCommandOptionBuilder()
                     .WithName("endpoint")
                     .WithDescription("Set the Azure OpenAI endpoint URL.")
@@ -167,7 +168,7 @@ public class FactCheckCommands
         try { AiProviderFactory.ParseProviderName(providerName); }
         catch
         {
-            await command.RespondAsync("❌ Invalid provider. Choose: OpenAI, Anthropic, or AzureOpenAI.", ephemeral: true);
+            await command.RespondAsync("❌ Invalid provider. Choose: OpenAI, Anthropic, AzureOpenAI, or Google.", ephemeral: true);
             return;
         }
 

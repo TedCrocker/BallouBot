@@ -159,10 +159,10 @@ public class AiProviderFactoryTests
     }
 
     [Test]
-    public async Task GetSupportedProviders_ReturnsThreeProviders()
+    public async Task GetSupportedProviders_ReturnsFourProviders()
     {
         var providers = BallouBot.Modules.FactCheck.Services.AiProviderFactory.GetSupportedProviders();
-        await Assert.That(providers.Count).IsEqualTo(3);
+        await Assert.That(providers.Count).IsEqualTo(4);
     }
 
     [Test]

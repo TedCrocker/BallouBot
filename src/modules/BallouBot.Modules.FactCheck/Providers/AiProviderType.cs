@@ -18,5 +18,10 @@ public enum AiProviderType
     /// <summary>
     /// Azure OpenAI (hosted OpenAI models on Azure)
     /// </summary>
-    AzureOpenAI
+    AzureOpenAI,
+
+    /// <summary>
+    /// Google Gemini (Gemini 2.0 Flash, etc.)
+    /// </summary>
+    Google
 }
