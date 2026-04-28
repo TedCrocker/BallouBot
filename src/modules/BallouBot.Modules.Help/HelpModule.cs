@@ -58,13 +58,21 @@ public class HelpModule : IModule
     {
         try
         {
+            // Since multiple modules share the /balloubot command, we must register
+            // the full command with ALL known subcommands each time.
             var command = new SlashCommandBuilder()
                 .WithName("balloubot")
                 .WithDescription("BallouBot commands")
                 .AddOption(new SlashCommandOptionBuilder()
                     .WithName("help")
                     .WithDescription("Show all loaded modules and their commands.")
-                    .WithType(ApplicationCommandOptionType.SubCommand));
+                    .WithType(ApplicationCommandOptionType.SubCommand))
+                .AddOption(new SlashCommandOptionBuilder()
+                    .WithName("errornotify")
+                    .WithDescription("Toggle error notification DMs for a user (Administrator only).")
+                    .WithType(ApplicationCommandOptionType.SubCommand)
+                    .AddOption("user", ApplicationCommandOptionType.User,
+                        "The user to toggle error notifications for.", isRequired: true));
 
             var builtCommand = command.Build();
             foreach (var guild in _context!.Client.Guilds)
