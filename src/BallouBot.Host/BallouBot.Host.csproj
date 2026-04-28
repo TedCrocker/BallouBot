@@ -29,6 +29,7 @@
     <ProjectReference Include="..\modules\BallouBot.Modules.Gif\BallouBot.Modules.Gif.csproj" />
     <ProjectReference Include="..\modules\BallouBot.Modules.FactCheck\BallouBot.Modules.FactCheck.csproj" />
     <ProjectReference Include="..\modules\BallouBot.Modules.Help\BallouBot.Modules.Help.csproj" />
+    <ProjectReference Include="..\modules\BallouBot.Modules.ErrorNotify\BallouBot.Modules.ErrorNotify.csproj" />
   </ItemGroup>
 
 </Project>

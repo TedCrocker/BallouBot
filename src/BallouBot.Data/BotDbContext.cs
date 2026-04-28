@@ -45,6 +45,11 @@ public class BotDbContext : DbContext
     public DbSet<FactCheckUser> FactCheckUsers => Set<FactCheckUser>();
 
     /// <summary>
+    /// Gets or sets the error notification subscriptions table.
+    /// </summary>
+    public DbSet<ErrorNotifySubscription> ErrorNotifySubscriptions => Set<ErrorNotifySubscription>();
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="BotDbContext"/> class.
     /// </summary>
     /// <param name="options">The database context options.</param>
@@ -240,6 +245,18 @@ public class BotDbContext : DbContext
         });
 
         modelBuilder.Entity<FactCheckUser>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.GuildId, e.UserId }).IsUnique();
+
+            entity.Property(e => e.GuildId)
+                .IsRequired();
+
+            entity.Property(e => e.UserId)
+                .IsRequired();
+        });
+
+        modelBuilder.Entity<ErrorNotifySubscription>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => new { e.GuildId, e.UserId }).IsUnique();
