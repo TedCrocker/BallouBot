@@ -1,0 +1,62 @@
+# BallouBot — Cline Rules
+
+## Project Overview
+BallouBot is a modular Discord bot built with **.NET 10**, **Discord.Net 3.19.1**, **EF Core 10** with **SQLite**, and **Serilog** for logging. It runs as a .NET Worker Service (`IHostedService`).
+
+## Architecture
+
+### Module System
+- Modules live in `src/modules/BallouBot.Modules.*/` and implement `IModule` from `BallouBot.Core`
+- Each module class is decorated with `[BotModule("id")]` for auto-discovery
+- Modules register DI services in `ConfigureServices()` and hook Discord events in `InitializeAsync()`
+- `IModuleContext` provides access to the `DiscordSocketClient`, `IServiceProvider`, and logging
+- Modules are discovered from compiled-in assemblies (`BallouBot.Modules.*.dll`) and a drop-in `modules/` directory
+
+### Key Projects
+- `src/BallouBot.Core/` — Interfaces (`IModule`, `IModuleContext`, `IErrorNotificationService`), attributes, entities
+- `src/BallouBot.Data/` — EF Core `BotDbContext`, migrations (SQLite)
+- `src/BallouBot.Host/` — Entry point (`Program.cs`), `BotHostedService`, `ModuleLoader`, `ModuleContext`
+- `src/modules/` — All module implementations
+
+### Database
+- Entities go in `src/BallouBot.Core/Entities/`
+- `DbSet` properties and `OnModelCreating` config go in `src/BallouBot.Data/BotDbContext.cs`
+- Migrations: `dotnet ef migrations add <Name> --project src/BallouBot.Data/BallouBot.Data.csproj --startup-project src/BallouBot.Host/BallouBot.Host.csproj`
+
+### Testing
+- Test framework: **TUnit** (v1.22.6) — uses `[Test]` attribute and `await Assert.That(...)` syntax
+- DB tests use `Microsoft.EntityFrameworkCore.InMemory`
+- Test projects live in `tests/BallouBot.Modules.*.Tests/`
+- Test csproj needs `<OutputType>Exe</OutputType>` for TUnit
+- Run tests: `dotnet test --project tests/<ProjectName>/<ProjectName>.csproj`
+
+## Current Modules
+| Module | ID | Command | Description |
+|---|---|---|---|
+| Welcome | `welcome` | — | Auto-welcomes new members |
+| Random Richard | `randomrichard` | `/richard` | Random Richard interactions |
+| Gif | `gif` | `/gif` | GIF search via Tenor |
+| Fact Check | `factcheck` | `/factcheck` | AI-powered fact-checking of watched users |
+| Help | `help` | `/balloubot help` | Lists all modules and commands |
+| Error Notify | `errornotify` | `/balloubot errornotify @user` | DMs admins on bot errors |
+
+## Conventions
+- Always use **scoped DbContext** from event handlers (`using var scope = context.Services.CreateScope()`)
+- Slash commands use **ephemeral responses** for configuration/admin commands
+- Admin-only commands check `SocketGuildUser.GuildPermissions.Administrator`
+- Error handling: wrap event handler logic in try/catch, log with structured parameters
+- The `/balloubot` command is shared — multiple modules add subcommands to it (help, errornotify)
+- Modules that share `/balloubot` must re-register the full command with all known subcommands
+
+## Workflow
+- Always run `dotnet build` to verify before committing
+- Always run tests for affected modules before committing
+- Commit with descriptive messages (summary + bullet points)
+- Always push to remote after committing
+- Solution file: `BallouBot.slnx` — add new projects with `dotnet sln add`
+
+## Key Documentation
+- `docs/MODULE_DEVELOPMENT.md` — How to create new modules (step-by-step guide)
+- `docs/SETUP.md` — Environment setup
+- `docs/DEPLOYMENT.md` — Deployment guide
+- `docs/INTEGRATION_TESTING.md` — Integration test guide
