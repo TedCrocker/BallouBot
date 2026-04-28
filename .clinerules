@@ -35,7 +35,7 @@ BallouBot is a modular Discord bot built with **.NET 10**, **Discord.Net 3.19.1*
 |---|---|---|---|
 | Welcome | `welcome` | — | Auto-welcomes new members |
 | Random Richard | `randomrichard` | `/richard` | Random Richard interactions |
-| Gif | `gif` | `/gif` | GIF search via Tenor |
+| Gif | `gif` | `/findgif` | GIF search via Tenor |
 | Fact Check | `factcheck` | `/factcheck` | AI-powered fact-checking of watched users |
 | Help | `help` | `/balloubot help` | Lists all modules and commands |
 | Error Notify | `errornotify` | `/balloubot errornotify @user` | DMs admins on bot errors |

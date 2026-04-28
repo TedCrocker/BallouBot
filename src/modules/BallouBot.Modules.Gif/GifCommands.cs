@@ -15,7 +15,7 @@ namespace BallouBot.Modules.Gif;
 
 /// <summary>
 /// Handles slash commands and button interactions for the GIF module.
-/// Provides /gif search with interactive preview browsing and /gif config for guild settings.
+/// Provides /findgif search with interactive preview browsing and /findgif config for guild settings.
 /// </summary>
 public class GifCommands
 {
@@ -41,14 +41,14 @@ public class GifCommands
     }
 
     /// <summary>
-    /// Registers the /gif slash command with Discord for all guilds.
+    /// Registers the /findgif slash command with Discord for all guilds.
     /// </summary>
     public async Task RegisterCommandsAsync()
     {
         try
         {
             var command = new SlashCommandBuilder()
-                .WithName("gif")
+                .WithName("findgif")
                 .WithDescription("Search for and post GIFs!")
                 .AddOption(new SlashCommandOptionBuilder()
                     .WithName("search")
@@ -90,22 +90,22 @@ public class GifCommands
             foreach (var guild in _context.Client.Guilds)
             {
                 await guild.CreateApplicationCommandAsync(builtCommand);
-                _logger.LogDebug("Registered /gif command on guild {GuildName} ({GuildId})", guild.Name, guild.Id);
+                _logger.LogDebug("Registered /findgif command on guild {GuildName} ({GuildId})", guild.Name, guild.Id);
             }
-            _logger.LogInformation("Registered /gif slash command on {Count} guild(s).", _context.Client.Guilds.Count);
+            _logger.LogInformation("Registered /findgif slash command on {Count} guild(s).", _context.Client.Guilds.Count);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to register /gif slash command.");
+            _logger.LogError(ex, "Failed to register /findgif slash command.");
         }
     }
 
     /// <summary>
-    /// Routes incoming /gif slash commands to the appropriate handler.
+    /// Routes incoming /findgif slash commands to the appropriate handler.
     /// </summary>
     public async Task HandleSlashCommandAsync(SocketSlashCommand command)
     {
-        if (command.CommandName != "gif") return;
+        if (command.CommandName != "findgif") return;
 
         var subCommand = command.Data.Options.First();
 
@@ -126,7 +126,7 @@ public class GifCommands
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error handling /gif {SubCommand}", subCommand.Name);
+            _logger.LogError(ex, "Error handling /findgif {SubCommand}", subCommand.Name);
             if (!command.HasResponded)
             {
                 await command.RespondAsync("An error occurred processing your command.", ephemeral: true);
@@ -149,7 +149,7 @@ public class GifCommands
 
         if (!_sessions.TryGetValue(sessionKey, out var session))
         {
-            await component.RespondAsync("This GIF preview has expired. Use `/gif search` to start a new search.", ephemeral: true);
+            await component.RespondAsync("This GIF preview has expired. Use `/findgif search` to start a new search.", ephemeral: true);
             return;
         }
 
@@ -228,14 +228,14 @@ public class GifCommands
 
         if (config is null || !config.IsEnabled)
         {
-            await command.FollowupAsync("The GIF module hasn't been configured yet. Ask a server admin to run `/gif config provider` first.", ephemeral: true);
+            await command.FollowupAsync("The GIF module hasn't been configured yet. Ask a server admin to run `/findgif config provider` first.", ephemeral: true);
             return;
         }
 
         // Parse provider type
         if (!Enum.TryParse<GifProviderType>(config.Provider, true, out var providerType))
         {
-            await command.FollowupAsync($"Unknown GIF provider: **{config.Provider}**. Use `/gif config provider` to set a valid one.", ephemeral: true);
+            await command.FollowupAsync($"Unknown GIF provider: **{config.Provider}**. Use `/findgif config provider` to set a valid one.", ephemeral: true);
             return;
         }
 
@@ -255,7 +255,7 @@ public class GifCommands
         // API key check
         if (provider.RequiresApiKey && string.IsNullOrWhiteSpace(config.ApiKey))
         {
-            await command.FollowupAsync($"No API key configured for **{provider.DisplayName}**. Ask a server admin to run `/gif config apikey`.", ephemeral: true);
+            await command.FollowupAsync($"No API key configured for **{provider.DisplayName}**. Ask a server admin to run `/findgif config apikey`.", ephemeral: true);
             return;
         }
 
@@ -342,7 +342,7 @@ public class GifCommands
 
         var provider = _providerFactory.GetProvider(providerType);
         var nsfwNote = provider.IsNsfw ? "\n⚠️ This provider serves **NSFW content** and will only work in NSFW-marked channels." : "";
-        var keyNote = provider.RequiresApiKey ? $"\n🔑 This provider requires an API key. Use `/gif config apikey` to set it." : "";
+        var keyNote = provider.RequiresApiKey ? $"\n🔑 This provider requires an API key. Use `/findgif config apikey` to set it." : "";
 
         await command.RespondAsync($"✅ GIF provider set to **{provider.DisplayName}**.{nsfwNote}{keyNote}", ephemeral: true);
     }
@@ -402,7 +402,7 @@ public class GifCommands
 
         if (config is null)
         {
-            await command.RespondAsync("The GIF module hasn't been configured yet. Use `/gif config provider` to get started.", ephemeral: true);
+            await command.RespondAsync("The GIF module hasn't been configured yet. Use `/findgif config provider` to get started.", ephemeral: true);
             return;
         }
 
