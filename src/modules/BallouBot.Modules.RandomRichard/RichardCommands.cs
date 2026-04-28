@@ -42,7 +42,7 @@ public class RichardCommands
             var command = new SlashCommandBuilder()
                 .WithName("richard")
                 .WithDescription("Configure Random Richard — get DMs about famous Richards!")
-                .WithDefaultMemberPermissions(GuildPermission.ManageGuild)
+                .WithDefaultMemberPermissions(GuildPermission.Administrator)
                 .AddOption(new SlashCommandOptionBuilder()
                     .WithName("toggle")
                     .WithDescription("Enable or disable Random Richard for this server.")

@@ -34,7 +34,7 @@ public class FactCheckCommands
             var command = new SlashCommandBuilder()
                 .WithName("factcheck")
                 .WithDescription("Configure the AI Fact Checker module.")
-                .WithDefaultMemberPermissions(GuildPermission.ManageGuild)
+                .WithDefaultMemberPermissions(GuildPermission.Administrator)
                 .AddOption(new SlashCommandOptionBuilder()
                     .WithName("toggle")
                     .WithDescription("Enable or disable fact-checking for this server.")
