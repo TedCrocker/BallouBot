@@ -106,9 +106,21 @@ public class HelpModule : IModule
         }
     }
 
+    /// <summary>
+    /// Subcommands of /balloubot that require Administrator permission.
+    /// Used to filter the help output for non-admin users.
+    /// </summary>
+    private static readonly HashSet<string> AdminOnlySubcommands = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "errornotify"
+    };
+
     private async Task HandleHelpAsync(SocketSlashCommand command)
     {
         if (_context is null) return;
+
+        var guildUser = command.User as SocketGuildUser;
+        var isAdmin = guildUser?.GuildPermissions.Administrator == true;
 
         // Get all loaded modules from DI
         var modules = _context.Services.GetServices<IModule>().ToList();
@@ -117,10 +129,15 @@ public class HelpModule : IModule
         var guild = _context.Client.GetGuild(command.GuildId!.Value);
         var guildCommands = await guild.GetApplicationCommandsAsync();
 
+        // Filter commands the user is authorized to see
+        var visibleCommands = guildCommands
+            .Where(cmd => CanUserSeeCommand(cmd, guildUser))
+            .ToList();
+
         // Build the help embed
         var embed = new EmbedBuilder()
             .WithTitle("🤖 BallouBot — Help")
-            .WithDescription($"BallouBot has **{modules.Count}** module(s) loaded with **{guildCommands.Count}** command(s) registered.")
+            .WithDescription($"BallouBot has **{modules.Count}** module(s) loaded with **{visibleCommands.Count}** command(s) available to you.")
             .WithColor(new Color(0x5865F2)) // Discord blurple
             .WithCurrentTimestamp()
             .WithFooter("Use /balloubot help to see this message again");
@@ -140,15 +157,16 @@ public class HelpModule : IModule
                 false);
         }
 
-        // Add a section listing all registered slash commands
-        if (guildCommands.Count > 0)
+        // Add a section listing registered slash commands the user can see
+        if (visibleCommands.Count > 0)
         {
             var commandLines = new List<string>();
-            foreach (var cmd in guildCommands.OrderBy(c => c.Name))
+            foreach (var cmd in visibleCommands.OrderBy(c => c.Name))
             {
-                // List subcommands if present
+                // List subcommands if present, filtering admin-only ones for non-admins
                 var subCommands = cmd.Options?
                     .Where(o => o.Type == ApplicationCommandOptionType.SubCommand)
+                    .Where(o => isAdmin || !AdminOnlySubcommands.Contains(o.Name))
                     .Select(o => o.Name)
                     .ToList();
 
@@ -156,6 +174,11 @@ public class HelpModule : IModule
                 {
                     var subList = string.Join(", ", subCommands);
                     commandLines.Add($"`/{cmd.Name}` — {cmd.Description}\n  ↳ Subcommands: `{subList}`");
+                }
+                else if (subCommands is null or { Count: 0 } && cmd.Options?.Any(o => o.Type == ApplicationCommandOptionType.SubCommand) == true)
+                {
+                    // All subcommands were filtered out — skip the command entirely
+                    continue;
                 }
                 else
                 {
@@ -184,6 +207,24 @@ public class HelpModule : IModule
         }
 
         await command.RespondAsync(embed: embed.Build(), ephemeral: true);
+    }
+
+    /// <summary>
+    /// Determines whether a user can see a command based on its DefaultMemberPermissions.
+    /// Commands with no permission restriction are visible to everyone.
+    /// </summary>
+    internal static bool CanUserSeeCommand(SocketApplicationCommand cmd, SocketGuildUser? user)
+    {
+        // If no permissions are required, the command is visible to everyone
+        if (cmd.DefaultMemberPermissions.RawValue == 0)
+            return true;
+
+        // If we can't determine user permissions, hide restricted commands
+        if (user is null)
+            return false;
+
+        // Check if the user has all the required permissions
+        return (user.GuildPermissions.RawValue & cmd.DefaultMemberPermissions.RawValue) == cmd.DefaultMemberPermissions.RawValue;
     }
 
     /// <summary>
