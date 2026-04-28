@@ -60,3 +60,10 @@ BallouBot is a modular Discord bot built with **.NET 10**, **Discord.Net 3.19.1*
 - `docs/SETUP.md` — Environment setup
 - `docs/DEPLOYMENT.md` — Deployment guide
 - `docs/INTEGRATION_TESTING.md` — Integration test guide
+
+## Self-Maintenance
+- **Always update this `.clinerules` file** when making changes that affect the project structure, conventions, or module listing
+- When adding a new module, add it to the "Current Modules" table above
+- When adding new conventions or patterns, document them in the appropriate section
+- When adding new documentation files, add them to the "Key Documentation" section
+- This file is your persistent memory — keep it accurate and up to date
