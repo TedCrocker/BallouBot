@@ -6,8 +6,9 @@ using Microsoft.Extensions.Logging;
 namespace BallouBot.Modules.FactCheck.Providers;
 
 /// <summary>
-/// AI provider implementation for Google Gemini (Gemini 2.0 Flash, etc.).
-/// Free tier: 15 RPM, 1M tokens/day at https://aistudio.google.com/
+/// AI provider implementation for Google Gemini (Gemini 2.5 Flash, etc.).
+/// Free tier models: gemini-2.5-flash, gemini-2.5-flash-lite, gemini-2.5-pro, gemini-2.0-flash
+/// Get a free API key at https://aistudio.google.com/
 /// </summary>
 public class GoogleGeminiProvider : IAiProvider
 {
@@ -29,7 +30,7 @@ public class GoogleGeminiProvider : IAiProvider
     public bool RequiresEndpoint => false;
 
     /// <inheritdoc />
-    public string DefaultModel => "gemini-2.0-flash";
+    public string DefaultModel => "gemini-2.5-flash";
 
     public GoogleGeminiProvider(HttpClient httpClient, ILogger<GoogleGeminiProvider> logger)
     {

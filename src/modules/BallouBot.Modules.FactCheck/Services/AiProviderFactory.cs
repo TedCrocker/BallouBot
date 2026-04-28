@@ -64,7 +64,7 @@ public class AiProviderFactory
             (AiProviderType.OpenAI, "OpenAI", "gpt-4o-mini", false),
             (AiProviderType.Anthropic, "Anthropic", "claude-sonnet-4-20250514", false),
             (AiProviderType.AzureOpenAI, "Azure OpenAI", "gpt-4o-mini", true),
-            (AiProviderType.Google, "Google Gemini", "gemini-2.0-flash", false)
+            (AiProviderType.Google, "Google Gemini", "gemini-2.5-flash", false)
         ];
     }
 }

@@ -61,7 +61,7 @@ public class FactCheckCommands
                     .WithName("model")
                     .WithDescription("Set the AI model to use.")
                     .WithType(ApplicationCommandOptionType.SubCommand)
-                    .AddOption("name", ApplicationCommandOptionType.String, "The model name (e.g., gpt-4o-mini, claude-sonnet-4-20250514, gemini-2.0-flash).", isRequired: true))
+                    .AddOption("name", ApplicationCommandOptionType.String, "The model name (e.g., gpt-4o-mini, claude-sonnet-4-20250514, gemini-2.5-flash).", isRequired: true))
                 .AddOption(new SlashCommandOptionBuilder()
                     .WithName("endpoint")
                     .WithDescription("Set the Azure OpenAI endpoint URL.")
