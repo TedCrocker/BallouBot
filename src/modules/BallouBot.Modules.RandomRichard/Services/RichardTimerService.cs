@@ -403,10 +403,7 @@ public class RichardTimerService
                 .WithFooter("Brought to you by Random Richard™ | Powered by Wikipedia\n💡 This was sent here because your DMs are disabled.")
                 .WithCurrentTimestamp();
 
-            if (!string.IsNullOrEmpty(richard.ImageUrl))
-            {
-                embed.WithImageUrl(richard.ImageUrl);
-            }
+            embed.WithImageUrl(richard.ImageUrl!);
 
             await thread.SendMessageAsync(
                 $"Hey {user.Mention}! You've been chosen for a Random Richard, but your DMs are closed so here it is:",
@@ -483,10 +480,7 @@ public class RichardTimerService
                 .WithFooter("Brought to you by Random Richard™ | Powered by Wikipedia")
                 .WithCurrentTimestamp();
 
-            if (!string.IsNullOrEmpty(richard.ImageUrl))
-            {
-                embed.WithImageUrl(richard.ImageUrl);
-            }
+            embed.WithImageUrl(richard.ImageUrl!);
 
             await dmChannel.SendMessageAsync(embed: embed.Build());
             return true;

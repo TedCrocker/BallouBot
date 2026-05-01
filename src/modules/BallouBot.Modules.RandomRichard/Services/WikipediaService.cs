@@ -130,34 +130,52 @@ public class WikipediaService
     }
 
     /// <summary>
-    /// Fetches a random Richard from Wikipedia.
+    /// Fetches a random Richard from Wikipedia that has an image.
+    /// Tries up to <paramref name="maxAttempts"/> different Richards before giving up.
     /// </summary>
-    /// <returns>A <see cref="RichardInfo"/> with the person's details, or null if the fetch failed.</returns>
-    public async Task<RichardInfo?> GetRandomRichardAsync()
+    /// <param name="maxAttempts">Maximum number of different Richards to try (default 10).</param>
+    /// <returns>A <see cref="RichardInfo"/> with the person's details and an image, or null if none could be found.</returns>
+    public async Task<RichardInfo?> GetRandomRichardAsync(int maxAttempts = 10)
     {
-        // Pick a random Richard from the curated list
-        var articleTitle = FamousRichards[_random.Next(FamousRichards.Length)];
+        var tried = new HashSet<string>();
 
-        try
+        for (var attempt = 0; attempt < maxAttempts && tried.Count < FamousRichards.Length; attempt++)
         {
-            return await FetchRichardFromWikipediaAsync(articleTitle);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "Failed to fetch Richard '{Article}' from Wikipedia, trying another...", articleTitle);
+            var articleTitle = FamousRichards[_random.Next(FamousRichards.Length)];
 
-            // Try a second random pick as fallback
+            // Skip if we've already tried this one
+            if (!tried.Add(articleTitle))
+            {
+                attempt--; // Don't count duplicate picks against our attempt limit
+                continue;
+            }
+
             try
             {
-                var fallbackTitle = FamousRichards[_random.Next(FamousRichards.Length)];
-                return await FetchRichardFromWikipediaAsync(fallbackTitle);
+                var richard = await FetchRichardFromWikipediaAsync(articleTitle);
+
+                if (richard is null)
+                {
+                    _logger.LogDebug("Skipping Richard '{Article}' — fetch returned null.", articleTitle);
+                    continue;
+                }
+
+                if (string.IsNullOrEmpty(richard.ImageUrl))
+                {
+                    _logger.LogDebug("Skipping Richard '{Article}' — no image available.", articleTitle);
+                    continue;
+                }
+
+                return richard;
             }
-            catch (Exception ex2)
+            catch (Exception ex)
             {
-                _logger.LogError(ex2, "Failed to fetch fallback Richard from Wikipedia.");
-                return null;
+                _logger.LogWarning(ex, "Failed to fetch Richard '{Article}' from Wikipedia, trying another...", articleTitle);
             }
         }
+
+        _logger.LogError("Failed to find a Richard with an image after {Attempts} attempt(s).", tried.Count);
+        return null;
     }
 
     /// <summary>

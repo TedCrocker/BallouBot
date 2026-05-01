@@ -435,10 +435,7 @@ public class RichardCommands
             .WithFooter("Brought to you by Random Richard™ | Powered by Wikipedia")
             .WithCurrentTimestamp();
 
-        if (!string.IsNullOrEmpty(richard.ImageUrl))
-        {
-            embed.WithImageUrl(richard.ImageUrl);
-        }
+        embed.WithImageUrl(richard.ImageUrl!);
 
         await command.FollowupAsync("Here's a preview of what a Random Richard DM looks like:", embed: embed.Build(), ephemeral: true);
     }
